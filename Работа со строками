@@ -1,0 +1,27 @@
+using System;
+using System.CodeDom;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace обучение
+{
+    internal class Program
+    {
+        static void Main()
+
+        {
+            Console.WriteLine("как вас зовут? ");
+            string name = (Console.ReadLine());
+            Console.WriteLine("Сколько вам лет? ");
+            int age = (Convert.ToInt32(Console.ReadLine()));
+            Console.WriteLine("Кто вы по знаку зодиака? ");
+            string znak = (Console.ReadLine());
+            Console.WriteLine("Где вы работаете? ");
+            string work = (Console.ReadLine());
+
+            System.Console.WriteLine($"Вас зовут {name}, вам {age} лет, вы - {znak} и работаете {work}.");
+        }
+    }
+}
