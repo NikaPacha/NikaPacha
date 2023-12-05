@@ -17,11 +17,11 @@ namespace обучение
             Console.WriteLine("Сколько вам лет? ");
             int age = (Convert.ToInt32(Console.ReadLine()));
             Console.WriteLine("Кто вы по знаку зодиака? ");
-            string znak = (Console.ReadLine());
+            string sign= (Console.ReadLine());
             Console.WriteLine("Где вы работаете? ");
             string work = (Console.ReadLine());
 
-            System.Console.WriteLine($"Вас зовут {name}, вам {age} лет, вы - {znak} и работаете {work}.");
+            System.Console.WriteLine($"Вас зовут {name}, вам {age} лет, вы - {sign} и работаете {work}.");
         }
     }
 }
