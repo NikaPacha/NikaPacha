@@ -1,0 +1,26 @@
+using System;
+using System.CodeDom;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace обучение
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int rowPictures;
+            int extraPictures;
+
+            int pictures = 52;
+            int PicturesInRow = 3;
+          
+            extraPictures = pictures % PicturesInRow;
+            rowPictures = pictures / PicturesInRow;
+
+            Console.WriteLine($"Можно вывести {rowPictures} заполненых рядов. {extraPictures} картинка будет сверх меры.");
+        }
+    }
+}
