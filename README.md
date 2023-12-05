@@ -23,6 +23,5 @@ namespace обучение
             double creteСhance = 13.7;
             long rangeWorld = 9223372036854775807;
         }
-
     }
 }
