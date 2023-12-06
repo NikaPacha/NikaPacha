@@ -11,16 +11,16 @@ namespace обучение
     {
         static void Main(string[] args)
         {
-            int rowPictures;
+            int filledRows;
             int extraPictures;
 
             int pictures = 52;
-            int PicturesInRow = 3;
+            int picturesInRow = 3;
           
-            extraPictures = pictures % PicturesInRow;
-            rowPictures = pictures / PicturesInRow;
+            extraPictures = pictures % picturesInRow;
+            filledRows = pictures / picturesInRow;
 
-            Console.WriteLine($"Можно вывести {rowPictures} заполненых рядов. {extraPictures} картинка будет сверх меры.");
+            Console.WriteLine($"Можно вывести {filledRows} заполненых рядов. {extraPictures} картинка будет сверх меры.");
         }
     }
 }
