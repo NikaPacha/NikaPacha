@@ -1,0 +1,28 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            int money;
+            int crystal;
+            int crystalUnitPrice = 10;
+            bool isAleToPay;
+
+            Console.WriteLine($"Кристалл стоит {crystalUnitPrice} монет.");
+            Console.Write("Сколько у тебя деняк? ");
+            money = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Сколько кристаллов хочешь купить?");
+            crystal = Convert.ToInt32(Console.ReadLine());
+
+            money -= crystal * crystalUnitPrice;
+            Console.WriteLine($"У вас {crystal} кристаллов, и {money} деняк осталось"); 
+        }
+    }
+}
