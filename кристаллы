@@ -11,18 +11,17 @@ namespace ConsoleApp3
         static void Main()
         {
             int money;
-            int crystal;
-            int crystalUnitPrice = 10;
-            bool isAleToPay;
+            int crystals;
+            int crystalsPrice = 10;
 
-            Console.WriteLine($"Кристалл стоит {crystalUnitPrice} монет.");
+            Console.WriteLine($"Кристалл стоит {crystalsPrice} монет.");
             Console.Write("Сколько у тебя деняк? ");
             money = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("Сколько кристаллов хочешь купить?");
-            crystal = Convert.ToInt32(Console.ReadLine());
+            crystals = Convert.ToInt32(Console.ReadLine());
 
-            money -= crystal * crystalUnitPrice;
-            Console.WriteLine($"У вас {crystal} кристаллов, и {money} деняк осталось"); 
+            money -= crystals * crystalsPrice;
+            Console.WriteLine($"У вас {crystals} кристаллов, и {money} деняк осталось");
         }
     }
 }
