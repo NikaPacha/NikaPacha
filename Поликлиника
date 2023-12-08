@@ -9,14 +9,16 @@ namespace ConsoleApp3
     internal class Program
     {
         static void Main()
+
         {
             int receptionTime = 10;
             Console.WriteLine("Введите кол-во человек в очереди:");
             int peopleInQueue = Convert.ToInt32(Console.ReadLine());
             int minutesInHours = 60;
+            int myTurn = receptionTime * peopleInQueue;
 
-            int hoursInQueue = (receptionTime * peopleInQueue) / minutesInHours;
-            int minutesInQueue = (receptionTime * peopleInQueue) % minutesInHours;
+            int hoursInQueue = myTurn / minutesInHours;
+            int minutesInQueue = myTurn % minutesInHours;
 
             if (hoursInQueue == 0)
             {
