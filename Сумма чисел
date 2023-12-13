@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace уроки
+{
+    internal class Program
+    {
+        static void Main()
+        {
+           
+            Random rand = new Random();
+            int number = rand.Next(1, 101);
+            int sumOfNumbers = 0;
+            int firstMultipleNumber = 3;
+            int secondMultipleNumber = 5;
+            
+            Console.WriteLine($"Тебе выпало: {number} \nВот числа кратные 3-м и 5-и: ");
+
+            for (int i = 1; i <= number; i++)
+            {
+                if (i % firstMultipleNumber == 0 || i % secondMultipleNumber == 0)
+                 {
+                    Console.WriteLine($"число: {i}");
+                    sumOfNumbers += i;
+                 }
+            }
+            Console.WriteLine($"Сумма этих чисел: {sumOfNumbers} ");
+        }
+    }
+}
