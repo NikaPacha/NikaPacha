@@ -1,0 +1,28 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace уроки
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string massage;
+            int times;
+
+            Console.WriteLine("Введите текст: ");
+            massage = Console.ReadLine();
+            Console.Write("Введие кол-во повторений: ");
+            times = Convert.ToInt32(Console.ReadLine());
+
+            while (times-- >  0)
+            {
+                Console.WriteLine(massage);
+            }
+        } 
+    }
+}
+ 
