@@ -11,22 +11,25 @@ namespace уроки
         static void Main(string[] args)
         {
             string userInput;
-            int count = 0;
+            bool isExitProgram = true;
+            string exit = "exit";
 
-                Console.WriteLine("Напишите что-нибудь: ");
-                Console.WriteLine("*Для выхода из программы, напишите 'exit '.");
+            Console.WriteLine("Напишите что-нибудь: ");
+            Console.WriteLine("*Для выхода из программы, напишите 'exit '.");
 
-            for (int i = 1; i > count; i++)
+            while (isExitProgram)
             {
                 userInput = Console.ReadLine();
-
-                if (userInput == "exit")
+                if (userInput == exit)
                 {
-                    Console.WriteLine("Пока!");
-                    break;
+                    isExitProgram = false;
+                    Console.WriteLine("Досвидания!");
+                }
+                else
+                {
+                    Console.WriteLine("Продолжай");
                 }
             }
         }
     }
 }
- 
