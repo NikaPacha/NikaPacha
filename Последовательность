@@ -13,7 +13,8 @@ namespace обучение
             int interval = 7;
             int firstNumber = 5;
             int lastNumber = 96;
-            
+
+            //for - так как нам известны точные ганици цикла
             for (int i = firstNumber; i <= lastNumber; i += interval)
             {
                 Console.WriteLine(i);
