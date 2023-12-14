@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace уроки
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string userInput;
+            bool exit = true;
+
+            Console.WriteLine("Напишите что-нибудь: ");
+            Console.WriteLine("*Для выхода из программы, напишите 'exit '.");
+
+            while (exit)
+            {
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "exit":
+                        exit = false;
+                        Console.WriteLine("Досвидания!");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+}
