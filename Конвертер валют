@@ -22,15 +22,16 @@ namespace ConsoleApp3
             float rublesInWallet;
             float dollarsInWallet;
             float euroInWallet;
-            int rubToUsd = 91;
-            int rubToEuro = 98;
-            int usdToRub = 92;
-            int usdToEuro = 2;
-            int euroToRub = 99;
-            int euroToUsd = 3;
+            float rubToUsd = 91f;
+            float rubToEuro = 98f;
+            float usdToRub = 92f;
+            float usdToEuro = 2f;
+            float euroToRub = 99f;
+            float euroToUsd = 3f;
             float exchangeCurrencyCount;
             string desirredOoperation;
-            bool isExitProgram = true;
+            bool isExitProgram = false;
+            int numerator = 1;
 
             Console.WriteLine("Добро пожаловать в обмен валют!");
             Console.Write("Введите баланс рублей: ");
@@ -40,7 +41,7 @@ namespace ConsoleApp3
             Console.Write("Введите баланс евро: ");
             euroInWallet = Convert.ToSingle(Console.ReadLine());
 
-            while (isExitProgram)
+            while (isExitProgram == false)
             {
                 Console.Clear();
                 Console.WriteLine($"Ваш баланс: {rublesInWallet} рублей, " + $"{dollarsInWallet} долларов," + $"{euroInWallet} евро.");
@@ -59,34 +60,39 @@ namespace ConsoleApp3
                         Console.WriteLine("Обмен рубля на доллары: ");
                         Console.Write("Сколько вы хотите обменять?: ");
                         exchangeCurrencyCount = Convert.ToSingle(Console.ReadLine());
+
                         if (rublesInWallet >= exchangeCurrencyCount)
                         {
+                            dollarsInWallet = exchangeCurrencyCount * (numerator / rubToUsd);
                             rublesInWallet -= exchangeCurrencyCount;
-                            dollarsInWallet += exchangeCurrencyCount / rubToUsd;
                         }
                         else
                         {
                             Console.WriteLine("Недопустимое колиечство рублей.");
                         }
                         break;
+
                     case CommandBuyRublesForEuro:
                         Console.WriteLine("Обмен рубля на евро: ");
                         Console.Write("Сколько вы хотите обменять?: ");
                         exchangeCurrencyCount = Convert.ToSingle(Console.ReadLine());
+
                         if (rublesInWallet >= exchangeCurrencyCount)
                         {
                             rublesInWallet -= exchangeCurrencyCount;
-                            euroInWallet += exchangeCurrencyCount / rubToEuro;
+                            euroInWallet += exchangeCurrencyCount * (numerator / rubToEuro);
                         }
                         else
                         {
                             Console.WriteLine("Недопустимое колиечство рублей.");
                         }
                         break;
+
                     case CommandBuyDollarsForRubles:
                         Console.WriteLine("Обмен долларов на рубли: ");
                         Console.Write("Сколько вы хотите обменять?: ");
                         exchangeCurrencyCount = Convert.ToSingle(Console.ReadLine());
+
                         if (dollarsInWallet >= exchangeCurrencyCount)
                         {
                             dollarsInWallet -= exchangeCurrencyCount;
@@ -97,10 +103,12 @@ namespace ConsoleApp3
                             Console.WriteLine("Недопустимое колиечство долларов.");
                         }
                         break;
+
                     case CommandBuyDollarsForEuro:
                         Console.WriteLine("Обмен доллары на евро: ");
                         Console.Write("Сколько вы хотите обменять?: ");
                         exchangeCurrencyCount = Convert.ToSingle(Console.ReadLine());
+
                         if (dollarsInWallet >= exchangeCurrencyCount)
                         {
                             dollarsInWallet -= exchangeCurrencyCount;
@@ -111,10 +119,12 @@ namespace ConsoleApp3
                             Console.WriteLine("Недопустимое колиечство долларов.");
                         }
                         break;
+
                     case CommandBuyEuroForRubles:
                         Console.WriteLine("Обмен евро на рубли: ");
                         Console.Write("Сколько вы хотите обменять?: ");
                         exchangeCurrencyCount = Convert.ToSingle(Console.ReadLine());
+
                         if (euroInWallet >= exchangeCurrencyCount)
                         {
                             euroInWallet -= exchangeCurrencyCount;
@@ -125,23 +135,28 @@ namespace ConsoleApp3
                             Console.WriteLine("Недопустимое колиечство евро.");
                         }
                         break;
+
                     case CommandBuyEuroForDollars:
                         Console.WriteLine("Обмен евро на доллары: ");
                         Console.Write("Сколько вы хотите обменять?: ");
                         exchangeCurrencyCount = Convert.ToSingle(Console.ReadLine());
+
                         if (euroInWallet >= exchangeCurrencyCount)
                         {
                             euroInWallet -= exchangeCurrencyCount;
-                            dollarsInWallet += exchangeCurrencyCount / euroToUsd;
+                            dollarsInWallet += exchangeCurrencyCount * (numerator / euroToUsd);
                         }
                         else
                         {
                             Console.WriteLine("Недопустимое колиечство евро.");
                         }
                         break;
+
                     case ExitCommand:
-                        isExitProgram = false;
+                        isExitProgram = true;
+                        Console.WriteLine("До свидания!");
                         break;
+
                     default:
                         Console.WriteLine("Выбрана не верная операция.");
                         break;
