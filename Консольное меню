@@ -1,0 +1,97 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            const int CommandInputName = 1;
+            const int CommandChangeColor = 2;
+            const int CommandСreatePassword = 3;
+            const int CommandShowName = 4;
+            const int ExitCommand = 5;
+
+            int setColor;
+            int desirredOoperation;
+            string password;
+            string setName = "";
+            string setPassword = "1234";
+            bool menuActive = true;
+
+            while (menuActive)
+            {
+                Console.Clear();
+                Console.WriteLine("Выберите нужную команду:");
+                Console.WriteLine($"{CommandInputName} - Установить имя. ");
+                Console.WriteLine($"{CommandChangeColor} - Выберать цвет текста.");
+                Console.WriteLine($"{CommandСreatePassword} - Установить пароль.");
+                Console.WriteLine($"{CommandShowName} - Вывести имя.");
+                Console.WriteLine($"{ExitCommand} - Выход");
+                desirredOoperation = Convert.ToInt32(Console.ReadLine());
+
+                switch (desirredOoperation)
+                {
+
+                    case CommandInputName:
+                        Console.Write("Установите имя:");
+                        setName = Console.ReadLine();
+                        Console.Clear();
+                        break;
+
+                    case CommandChangeColor:
+                        Console.WriteLine("1: Синий. \n2: Красный. \n3: Зеленный ");
+                        setColor = Convert.ToInt32(Console.ReadLine());
+
+                        if (setColor == 1)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.Clear();
+                        }
+                        else if (setColor == 2)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Clear();
+
+                        }
+                        else if (setColor == 3)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.Clear();
+                        }
+                        break;
+
+                    case CommandСreatePassword:
+                        Console.Write("Установите пароль:");
+                        setPassword = Console.ReadLine();
+                        Console.Clear();
+                        break;
+
+                    case CommandShowName:
+                        Console.Write("Введите пароль: ");
+                        password = Console.ReadLine();
+
+                        if (password == setPassword)
+                        {
+                            Console.WriteLine("Имя пользователя: " + setName);
+                            Console.ReadKey();
+                            Console.Clear();
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("Пароль неверный.");
+                            Console.ReadKey();
+                            Console.Clear();
+                        }
+                        break;
+
+                    case ExitCommand:
+                        Console.WriteLine("Вы вышли из меню!");
+                        menuActive = false;
+                        break;
+                }
+            }
+        }
+    }
+}
