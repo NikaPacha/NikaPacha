@@ -11,6 +11,9 @@ namespace ConsoleApp1
             const int CommandСreatePassword = 3;
             const int CommandShowName = 4;
             const int ExitCommand = 5;
+            const int ComandBlueColor = 1;
+            const int ComandRedColor = 2;
+            const int ComandGreenColor = 3;
 
             int setColor;
             int desirredOoperation;
@@ -40,7 +43,7 @@ namespace ConsoleApp1
                         break;
 
                     case CommandChangeColor:
-                        Console.WriteLine("1: Синий. \n2: Красный. \n3: Зеленный ");
+                        Console.WriteLine($"{ComandBlueColor}: Синий. \n{ComandRedColor}: Красный. \n{ComandGreenColor}: Зеленный ");
                         setColor = Convert.ToInt32(Console.ReadLine());
 
                         if (setColor == 1)
@@ -77,7 +80,6 @@ namespace ConsoleApp1
                             Console.ReadKey();
                             Console.Clear();
                         }
-
                         else
                         {
                             Console.WriteLine("Пароль неверный.");
