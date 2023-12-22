@@ -8,24 +8,25 @@ namespace ConsoleApp1
         {
             string name;
             char symbol;
-            int namelenght;
+            int nameLenght;
+            int additionalSymbol = 1;
+            string characters = "";
 
             Console.Write("Введите имя: ");
             name = Console.ReadLine();
-            namelenght = name.Length;
+            nameLenght = name.Length;
             Console.Write("Введите символ: ");
             symbol = Convert.ToChar(Console.ReadLine());
 
-            for (int i = 0; i <= namelenght + 1; i++)
+            for (int i = 0; i <= (nameLenght + additionalSymbol); i++)
             {
-                Console.Write(symbol);
+                characters += symbol;
             }
-            Console.WriteLine("\n" + symbol + name + symbol);
+            string secondLine = symbol + name + symbol;
 
-            for (int i = 0; i <= namelenght + 1; i++)
-            {
-                Console.Write(symbol);
-            }
+            Console.WriteLine(characters);
+            Console.WriteLine(secondLine);
+            Console.WriteLine(characters);
             Console.ReadKey();
         }
     }
