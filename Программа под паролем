@@ -11,7 +11,7 @@ namespace ConsoleApp3
     {
         static void Main()
         {
-            int triesCount = 5;
+            int triesCount = 3;
             string password = "123456";
             string userInput;
 
@@ -21,6 +21,7 @@ namespace ConsoleApp3
             {
                 int triesCountLeft = triesCount - i - 1;
                 userInput = Console.ReadLine();
+
                 if (userInput == password)
                 {
                     Console.WriteLine("Пароль верен.");
