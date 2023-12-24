@@ -14,22 +14,19 @@ namespace ConsoleApp3
             int number;
             int minNumber = 100;
             int maxNumber = 1000;
-            int minRandNumber = 1;
-            int maxRandNumber = 28;
+            int minRandomNumber = 1;
+            int maxRandomNumber = 28;
             int sum = 0;
 
             Random random = new Random();
-            number = random.Next(minRandNumber, maxRandNumber);
+            number = random.Next(minRandomNumber, maxRandomNumber);
 
             Console.WriteLine($"Наше число N = {number}.");
             Console.Write($"Трехзначные натуральные числа, кратные {number}: ");
 
             for (int i = 0; i < maxNumber; i += number)
             {
-                if (i < minNumber)
-                {
-                }
-                else
+                if (i >= minNumber)
                 {
                     Console.Write(i + ",");
                     sum++;
