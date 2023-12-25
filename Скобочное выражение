@@ -1,0 +1,70 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            {
+                char symbolLeftParenthesis = '('; 
+                int currentInvestmentDepth = 0;
+                int maxInvestmentDepth = 0; 
+                int result = 0; 
+
+                Console.WriteLine("Введите строку из символо '(' и ')'");
+                string text = Console.ReadLine();
+
+                for (int i = 0; i < text.Length; i++)
+                {
+                    if (text[i] == symbolLeftParenthesis)
+                    {
+                        currentInvestmentDepth++;
+                        maxInvestmentDepth++;
+                    }
+                    else
+                    {
+                        currentInvestmentDepth--;
+                        if (i != text.Length - 1 && maxInvestmentDepth > result)
+                        {
+                            result = maxInvestmentDepth;
+                            maxInvestmentDepth--;
+                        }
+                        else
+                        {
+                            if (currentInvestmentDepth == 0 && result == 0)
+                            {
+                                result = maxInvestmentDepth;
+                                maxInvestmentDepth--;
+                            }
+                            else
+                            {
+                                maxInvestmentDepth--;
+                            }
+                        }
+                    }
+                    if (currentInvestmentDepth < 0)
+                    {
+                        break;
+                    }
+                }
+                if (currentInvestmentDepth == 0)
+                {
+                    Console.WriteLine("Строка корректная " + text + "\n" + "Максимум глубина равняется: " + result);
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка! Не верная строка " + text);
+                }
+                Console.ReadKey();
+            }
+        }
+    }
+}
