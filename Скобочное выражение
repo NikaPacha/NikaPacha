@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -13,58 +14,59 @@ namespace ConsoleApp3
     {
         static void Main()
         {
+            char symbolLeftParenthesis = '(';
+            char symbolRightParenthesis = ')';
+            int currentInvestmentDepth = 0;
+            int maxInvestmentDepth = 0;
+            int result = 0;
+            int oneBracket = 1;
+
+            Console.WriteLine("Введите строку из символо '(' и ')'");
+            string text = Console.ReadLine();
+
+            for (int i = 0; i < text.Length; i++)
             {
-                char symbolLeftParenthesis = '('; 
-                int currentInvestmentDepth = 0;
-                int maxInvestmentDepth = 0; 
-                int result = 0; 
-
-                Console.WriteLine("Введите строку из символо '(' и ')'");
-                string text = Console.ReadLine();
-
-                for (int i = 0; i < text.Length; i++)
+                if (text[i] == symbolLeftParenthesis)
                 {
-                    if (text[i] == symbolLeftParenthesis)
+                    currentInvestmentDepth++;
+                    maxInvestmentDepth++;
+                }
+                else if (text[i] == symbolRightParenthesis)
+                {
+                    currentInvestmentDepth--;
+                    if (i != text.Length - oneBracket && maxInvestmentDepth > result)
                     {
-                        currentInvestmentDepth++;
-                        maxInvestmentDepth++;
+                        result = maxInvestmentDepth;
+                        maxInvestmentDepth--;
                     }
                     else
                     {
-                        currentInvestmentDepth--;
-                        if (i != text.Length - 1 && maxInvestmentDepth > result)
+                        if (currentInvestmentDepth == 0 && result == 0)
                         {
                             result = maxInvestmentDepth;
                             maxInvestmentDepth--;
                         }
                         else
                         {
-                            if (currentInvestmentDepth == 0 && result == 0)
-                            {
-                                result = maxInvestmentDepth;
-                                maxInvestmentDepth--;
-                            }
-                            else
-                            {
-                                maxInvestmentDepth--;
-                            }
+                            maxInvestmentDepth--;
                         }
                     }
-                    if (currentInvestmentDepth < 0)
-                    {
-                        break;
-                    }
+
                 }
-                if (currentInvestmentDepth == 0)
+                if (currentInvestmentDepth < 0)
                 {
-                    Console.WriteLine("Строка корректная " + text + "\n" + "Максимум глубина равняется: " + result);
+                    break;
                 }
-                else
-                {
-                    Console.WriteLine("Ошибка! Не верная строка " + text);
-                }
-                Console.ReadKey();
             }
+            if (currentInvestmentDepth == 0)
+            {
+                Console.WriteLine("Строка корректная " + text + "\n" + "Максимум глубина равняется: " + result);
+            }
+            else
+            {
+                Console.WriteLine("Ошибка! Не верная строка " + text);
+            }
+            Console.ReadKey();
         }
     }
 }
