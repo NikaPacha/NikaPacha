@@ -1,0 +1,62 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            char symbolLeftParenthesis = '(';
+            char symbolRightParenthesis = ')';
+            int symbol = 0;
+            int count = 0;
+            int result = 0;
+            int bracket = 1;
+
+
+            Console.WriteLine("Введите строку из символо '(' и ')'");
+            string text = Console.ReadLine();
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] == symbolLeftParenthesis)
+                {
+                    symbol++;
+                }
+                else if (text[i] == symbolRightParenthesis)
+                {
+                    if (i != text.Length - bracket && text[i + bracket] != symbolLeftParenthesis)
+                    {
+                        count++;
+                    }
+                    symbol--;
+                }
+
+                if (symbol < 0)
+                {
+                    break;
+                }
+                else if (symbol == 0)
+                {
+                    result = count;
+                }
+            }
+            if (symbol == 0)
+            {
+                Console.WriteLine("Строка корректная " + text + "\n" + "Максимум глубина равняется: " + (result + 1));
+            }
+            else
+            {
+                Console.WriteLine("Ошибка! Не верная строка " + text);
+            }
+        }
+    }
+}
