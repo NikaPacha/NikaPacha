@@ -21,7 +21,6 @@ namespace ConsoleApp3
             int result = 0;
             int bracket = 1;
 
-
             Console.WriteLine("Введите строку из символо '(' и ')'");
             string text = Console.ReadLine();
 
