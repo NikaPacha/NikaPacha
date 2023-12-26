@@ -16,10 +16,10 @@ namespace ConsoleApp3
         {
             char symbolLeftParenthesis = '(';
             char symbolRightParenthesis = ')';
-            int symbol = 0;
-            int count = 0;
-            int result = 0;
-            int bracket = 1;
+            int maxInvestmentDepth = 0;
+            int currentInvestmentDepth = 0;
+            int lineDepth = 0;
+            int number = 1;
 
             Console.WriteLine("Введите строку из символо '(' и ')'");
             string text = Console.ReadLine();
@@ -28,29 +28,25 @@ namespace ConsoleApp3
             {
                 if (text[i] == symbolLeftParenthesis)
                 {
-                    symbol++;
+                    maxInvestmentDepth++;
                 }
                 else if (text[i] == symbolRightParenthesis)
                 {
-                    if (i != text.Length - bracket && text[i + bracket] != symbolLeftParenthesis)
-                    {
-                        count++;
-                    }
-                    symbol--;
+                    currentInvestmentDepth++;
+                    maxInvestmentDepth--;
                 }
-
-                if (symbol < 0)
+                if (maxInvestmentDepth < 0)
                 {
                     break;
                 }
-                else if (symbol == 0)
+                else if (maxInvestmentDepth == 0)
                 {
-                    result = count;
+                    lineDepth = currentInvestmentDepth;
                 }
             }
-            if (symbol == 0)
+            if (maxInvestmentDepth == 0)
             {
-                Console.WriteLine("Строка корректная " + text + "\n" + "Максимум глубина равняется: " + (result + 1));
+                Console.WriteLine("Строка корректная " + text + "\n" + "Максимум глубина равняется: " + (lineDepth - number));
             }
             else
             {
