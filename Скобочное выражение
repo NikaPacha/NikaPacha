@@ -14,43 +14,41 @@ namespace ConsoleApp3
     {
         static void Main()
         {
+            int lineDepth = 0;
+            int maxInvestmentDepth = 0;
             char symbolLeftParenthesis = '(';
             char symbolRightParenthesis = ')';
-            int maxInvestmentDepth = 0;
-            int currentInvestmentDepth = 0;
-            int lineDepth = 0;
-            int number = 1;
 
-            Console.WriteLine("Введите строку из символо '(' и ')'");
+            Console.WriteLine($"Введите скобочное выражение, используя только \"{symbolLeftParenthesis}\" или \"{symbolRightParenthesis}\", чтобы понять верное оно или нет и узнать глубину выражения.");
             string text = Console.ReadLine();
 
             for (int i = 0; i < text.Length; i++)
             {
                 if (text[i] == symbolLeftParenthesis)
                 {
+                    lineDepth++;
+                }
+                if (lineDepth > maxInvestmentDepth)
+                {
                     maxInvestmentDepth++;
                 }
-                else if (text[i] == symbolRightParenthesis)
+                if (text[i] == symbolRightParenthesis)
                 {
-                    currentInvestmentDepth++;
-                    maxInvestmentDepth--;
+                    lineDepth--;
                 }
-                if (maxInvestmentDepth < 0)
+                if (lineDepth < 0)
                 {
                     break;
                 }
-                else if (maxInvestmentDepth == 0)
-                {
-                    lineDepth = currentInvestmentDepth;
-                }
             }
-            if (maxInvestmentDepth == 0)
+            if (lineDepth == 0)
             {
-                Console.WriteLine("Строка корректная " + text + "\n" + "Максимум глубина равняется: " + (lineDepth - number));
+                Console.WriteLine("Выражение верное.");
+                Console.WriteLine("Глубина выражения - " + maxInvestmentDepth);
             }
             else
             {
-                Console.WriteLine("Ошибка! Не верная строка " + text);
+                Console.WriteLine("Посчитать глубину невозможно, потому что скобочное выражение неверное.");
             }
         }
     }
