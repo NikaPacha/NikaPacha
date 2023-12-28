@@ -1,0 +1,149 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Linq;
+using System.Runtime.Remoting.Lifetime;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            Random rnd = new Random();
+            int healthSkorpion = rnd.Next(200, 300);
+            int damageSkorpion = rnd.Next(50, 80);
+            int healthPlayer = rnd.Next(150, 350);
+            int healthPlayerMax = healthPlayer;
+            int manaPlayer = rnd.Next(300, 400);
+
+            int fireballDamage = 50;
+            int healing = 20;
+            int thunderboltDamage = 200;
+            int stoneStrikeDamage = 100;
+
+            int fireballCostMana = 15;
+            int healingCostMana = 30;
+            int thunderboltCostMana = 120;
+            int stoneStrikeCostMana = 80;
+
+            bool startGame = true;
+            string castSpell;
+
+            const string CommandBuyFireball = "1";
+            const string CommandBuyHealing = "2";
+            const string CommandBuyThunderbolt = "3";
+            const string CommandBuyStoneStrike = "4";
+
+            Console.WriteLine("Гиганский Скорпион атакует, приготовьтесь к бою\n \nЗаклинания,что Вам доступны: \n");
+            Console.WriteLine($" {CommandBuyFireball} - Огненый шар наносит {fireballDamage} урона, отнимает {fireballCostMana} единиц маны.\n");
+            Console.WriteLine($" {CommandBuyHealing} - Востанавливает игроку {healing} здоровья, отнимает {healingCostMana} единиц маны.\n");
+            Console.WriteLine($" {CommandBuyThunderbolt} - Удар молнией наносит {thunderboltDamage} урона, отнимает {thunderboltCostMana} единиц маны.\n");
+            Console.WriteLine($" {CommandBuyStoneStrike} - Удар камнем наносит {stoneStrikeDamage} урона,  отнимает {stoneStrikeCostMana} единиц маны.\n");
+
+            while (startGame)
+            {
+                Console.WriteLine($"\nПоказатели  Скорпиона : \n Здоровье: {healthSkorpion} , Урон: {damageSkorpion} \n");
+                Console.WriteLine($"\nПоказатели игрока: \n Здоровье: {healthPlayer} , Мана: {manaPlayer} \n");
+
+                Console.Write("Введите заклинание которое хотите применить: ");
+                castSpell = Console.ReadLine();
+                if (manaPlayer <= 0)
+                {
+                    Console.WriteLine("\nИгра окончена, недостаточно маны для продолжения битвы");
+                }
+                else if (healthSkorpion <= 0 && healthPlayer <= 0)
+                {
+                    Console.WriteLine("\n  Ничья.");
+                    startGame = false;
+                }
+                else if (healthSkorpion <= 0)
+                {
+                    Console.WriteLine("\nПротивник пал.");
+                    startGame = false;
+                }
+                else if (healthPlayer <= 0)
+                {
+                    Console.WriteLine("\nИгрок пал.");
+                    startGame = false;
+                }
+                else
+                {
+                    switch (castSpell)
+                    {
+                        case (CommandBuyFireball):
+                            if (manaPlayer >= fireballCostMana)
+                            {
+                                healthSkorpion -= fireballDamage;
+                                Console.WriteLine($"\nПаук потерял {fireballDamage} единиц здоровья");
+                                manaPlayer -= fireballCostMana;
+                                healthPlayer -= damageSkorpion;
+                                Console.Write($"\nСкорпион атаковал ядом.Игрок потерял {damageSkorpion} здоровья\n");
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nУ вас не достаточно маны!");
+                            }
+                            break;
+
+                        case (CommandBuyHealing):
+                            if (manaPlayer >= healingCostMana)
+                            {
+                                manaPlayer -= healingCostMana;
+                                healthPlayer += healing;
+                                Console.WriteLine($"\nВаше текущее здоровье равно: {healthPlayer}");
+                            }
+                            else if (healthPlayer == healthPlayerMax)
+                            {
+                                Console.WriteLine("\nУ вас полный запас здоровья");
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nУ вас не достаточно маны!");
+                            }
+                            break;
+
+                        case (CommandBuyThunderbolt):
+                            if (manaPlayer >= thunderboltCostMana)
+                            {
+                                Console.WriteLine($"\nСкорпион потерял {thunderboltDamage} единиц здоровья");
+                                healthSkorpion -= thunderboltDamage;
+                                manaPlayer -= thunderboltCostMana;
+                                healthPlayer -= damageSkorpion;
+                                Console.Write($"\nСкорпион атакует жалом, вы получаете - {damageSkorpion} урона\n");
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nУ вас не достаточно маны!");
+                            }
+                            break;
+
+                        case (CommandBuyStoneStrike):
+                            if (manaPlayer >= stoneStrikeCostMana)
+                            {
+                                healthSkorpion -= stoneStrikeDamage;
+                                Console.WriteLine($"\nСкорпион потерял {stoneStrikeDamage} единиц здоровья");
+
+                                manaPlayer -= stoneStrikeCostMana;
+                                healthPlayer -= damageSkorpion;
+                                Console.Write($"\nСкорпион бьет клешнями по голове - которые нанесли {damageSkorpion} урона\n");
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nУ вас не достаточно маны!");
+                            }
+                            break;
+
+                        default:
+                            Console.WriteLine($"\nВам незнакомо {castSpell} это заклинание");
+                            break;
+                    }
+                }
+            }
+        }
+    }
+}
