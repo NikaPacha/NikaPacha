@@ -32,15 +32,18 @@ namespace ConsoleApp3
                 {
                     lineDepth--;
                 }
+
                 if (lineDepth > maxInvestmentDepth)
                 {
                     maxInvestmentDepth++;
                 }
+
                 if (lineDepth < 0)
                 {
                     break;
                 }
             }
+
             if (lineDepth == 0)
             {
                 Console.WriteLine("Выражение верное.");
