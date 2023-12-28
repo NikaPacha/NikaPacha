@@ -28,13 +28,13 @@ namespace ConsoleApp3
                 {
                     lineDepth++;
                 }
+                else if (text[i] == symbolRightParenthesis)
+                {
+                    lineDepth--;
+                }
                 if (lineDepth > maxInvestmentDepth)
                 {
                     maxInvestmentDepth++;
-                }
-                if (text[i] == symbolRightParenthesis)
-                {
-                    lineDepth--;
                 }
                 if (lineDepth < 0)
                 {
