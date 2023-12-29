@@ -33,7 +33,6 @@ namespace ConsoleApp3
             int thunderboltCostMana = 120;
             int stoneStrikeCostMana = 80;
 
-
             bool isGameStarted = true;
             string castSpell;
 
@@ -78,7 +77,6 @@ namespace ConsoleApp3
                             break;
 
                         case (CommandBuyHealing):
-
                             if (manaPlayer >= healingCostMana)
                             {
                                 manaPlayer -= healingCostMana;
@@ -143,7 +141,6 @@ namespace ConsoleApp3
                             break;
                     }
                 }
-
                 else if (manaPlayer <= 0)
                 {
                     Console.WriteLine("\nИгра окончена, недостаточно маны для продолжения битвы");
