@@ -1,0 +1,51 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            int[] array = new int[30];
+            int lastIndex = array.Length - 1;
+
+            Random random = new Random();
+
+            Console.WriteLine("Массив:");
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = random.Next(1, 50);
+
+                Console.Write(array[i] + " ");
+            }
+
+            Console.WriteLine("\nЛокальные максимумы: ");
+
+            if (array[0] > array[1])
+            {
+                Console.Write(array[0] + " ");
+            }
+
+            for (int i = 1; i < array.Length - 1; i++)
+            {
+                if (array[i] > array[i - 1] && array[i] > array[i + 1])
+                {                   
+                    Console.Write(array[i] + " ");
+                }
+            }
+
+            if (array[lastIndex] > array[lastIndex - 1])
+            {
+                Console.WriteLine(array[lastIndex]);
+            }
+
+            Console.WriteLine();
+        }
+    }
+}
