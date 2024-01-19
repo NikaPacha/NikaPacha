@@ -17,27 +17,36 @@ namespace ConsoleApp3
         static void Main()
         {
             int[,] array = {
-                { 3, 4, 6, 8 },
-                { 7, 3, 5, 9 }
+            { 1, 2, 3,},
+            { 4, 5, 6,}
             };
             int sum = 0;
-            int multiplication = 1;
-            int half = 2;
+            int increaseResult = 1;
+            int line = 1;
+            int column = 0;
 
-            Console.WriteLine("Массив:");
+            Console.Write("Исходная матрица:\n");
 
             for (int i = 0; i < array.GetLength(0); i++)
             {
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
                     Console.Write(array[i, j]);
-                    sum += array[1, j];
                 }
-                multiplication *= array[i, 0];
                 Console.WriteLine();
             }
-            Console.WriteLine(sum / half + " сумма второй строки");
-            Console.WriteLine(multiplication + " произведение первого столбца");           
+
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                increaseResult *= array[i, column];
+            }
+            Console.WriteLine($"Произведение первого столбца: {increaseResult}");
+
+            for (int j = 0; j < array.GetLength(1); j++)
+            {
+                sum += array[line, j];
+            }
+            Console.WriteLine($"Сумма второй строки: {sum}");
         }
     }
 }
