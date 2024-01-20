@@ -1,0 +1,82 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+    internal class Program
+    {
+        static void Main()
+        {           
+            const string CommandBuySum = "sum";
+            const string ExitCommand = "exit";
+
+            int lengthArray = 0;
+            int[] array = new int[lengthArray];
+            int[] tempArray = new int[array.Length + 1];
+            int number;
+            string desirredOoperation;
+            bool isExitProgram = false;
+
+            while (isExitProgram == false)
+            {              
+                Console.WriteLine($"Введите число. ");
+                Console.WriteLine($"{CommandBuySum} - Напишите для сумирования всех чисел:");
+                Console.WriteLine($"{ExitCommand} - выход");
+                desirredOoperation = Console.ReadLine();
+
+
+                switch (desirredOoperation)
+                {
+                    case CommandBuySum:
+
+                        int sum = 0;
+
+                        for (int i = 0; i < tempArray.Length; i++)
+                        {
+                            sum += tempArray[i];
+                        }
+
+                        Console.WriteLine("Сумма чисел = " + sum);
+                        break;
+
+                    case ExitCommand:
+
+                        isExitProgram = true;
+                        Console.WriteLine("До свидания!");
+                        break;
+
+                    default:
+
+                        Console.Clear();
+
+                        number = Convert.ToInt32(desirredOoperation);
+                        lengthArray += 1;
+                        array = new int[lengthArray];
+
+                        for (int i = 0; i < tempArray.Length; i++)
+                        {
+                            array[i] = tempArray[i];
+                        }
+
+                        array[lengthArray - 1] = number;
+                        tempArray = new int[lengthArray];
+
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            tempArray[i] = array[i];
+                            Console.Write(array[i] + " ");
+                        }
+
+                        Console.WriteLine();
+                        tempArray[lengthArray - 1] = number;
+                        break;
+                }
+            }
+        }
+    }
+}
