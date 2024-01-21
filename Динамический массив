@@ -11,29 +11,26 @@ namespace ConsoleApp3
     internal class Program
     {
         static void Main()
-        {           
+        {
             const string CommandBuySum = "sum";
             const string ExitCommand = "exit";
 
             int lengthArray = 0;
             int[] array = new int[lengthArray];
-            int[] tempArray = new int[array.Length + 1];
-            int number;
+            int[] tempArray = new int[lengthArray + 1];
             string desirredOoperation;
-            bool isExitProgram = false;
+            bool isRunning = true;
 
-            while (isExitProgram == false)
-            {              
+            while (isRunning == true)
+            {
                 Console.WriteLine($"Введите число. ");
                 Console.WriteLine($"{CommandBuySum} - Напишите для сумирования всех чисел:");
                 Console.WriteLine($"{ExitCommand} - выход");
                 desirredOoperation = Console.ReadLine();
 
-
                 switch (desirredOoperation)
                 {
                     case CommandBuySum:
-
                         int sum = 0;
 
                         for (int i = 0; i < tempArray.Length; i++)
@@ -45,16 +42,15 @@ namespace ConsoleApp3
                         break;
 
                     case ExitCommand:
-
-                        isExitProgram = true;
+                        isRunning = false;
                         Console.WriteLine("До свидания!");
                         break;
 
                     default:
-
                         Console.Clear();
 
-                        number = Convert.ToInt32(desirredOoperation);
+                        int number = Convert.ToInt32(desirredOoperation);
+
                         lengthArray += 1;
                         array = new int[lengthArray];
 
