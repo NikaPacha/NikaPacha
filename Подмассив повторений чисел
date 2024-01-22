@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            int[] array = new int[30];
+            int number = 0;
+            int repetition = 1;
+            int maxRepetition = 0;
+
+            Random random = new Random();
+
+            Console.WriteLine("Массив");
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = random.Next(0, 11);
+                Console.Write(array[i] + " ");
+            }
+
+            for (int i = 0; i < array.Length - 1; i++)
+            {
+                if (array[i] == array[i + 1])
+                {
+                    repetition++;
+                }
+                else
+                {
+                    repetition = 1;
+                }
+
+                if (repetition > maxRepetition)
+                {
+                    number = array[i];
+                    maxRepetition = repetition;
+                }
+            }
+            Console.WriteLine($"\nЧисло {number} повторяется большее число раз подряд ({maxRepetition}).");
+        }
+    }
+}
