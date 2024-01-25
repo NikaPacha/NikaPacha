@@ -12,8 +12,10 @@ namespace ConsoleApp3
     {
         static void Main()
         {
-            int[] array = new int[10];          
+            int[] array = new int[10];
             int number;
+            int maxRandomNumber = 10;
+            int minRandomNumber = 0;
 
             Random random = new Random();
 
@@ -21,7 +23,7 @@ namespace ConsoleApp3
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = random.Next(0, 10);
+                array[i] = random.Next(minRandomNumber, maxRandomNumber);
                 Console.Write(array[i] + " ");
             }
 
