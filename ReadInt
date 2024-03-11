@@ -1,0 +1,37 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Уроки
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Введенное число: " + GetNumber());
+        }
+
+        static int GetNumber()
+        {
+            bool isNumberEntered = false;
+            int number = 0;
+
+            while (isNumberEntered == false)
+            {
+                Console.Clear();
+                Console.Write("Введи число: ");
+
+                string imput = Console.ReadLine();
+
+                if (int.TryParse(imput, out number) == true)
+                {
+                    isNumberEntered = true;
+                }
+            }
+
+            return number;
+        }
+    }
+}
