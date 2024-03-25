@@ -1,0 +1,41 @@
+using System;
+ 
+namespace ConsoleApp2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int[] array = { 1, 2, 3, 4, 5, 6 };
+            
+            Console.Write("Исходный массив \n");
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write(array[i] + ",");
+            }
+            
+            ShuffleArray(array);
+
+            Console.WriteLine("\nПеремешанный массив");
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write(array[i] + ",");
+            }
+            Console.WriteLine();          
+        }
+
+        static void ShuffleArray(int[] array)
+        {
+            Random random = new Random();
+            for (int i = array.Length - 1; i >= 0; i--)
+            {
+                int randomItem = random.Next(i);
+                int shuffledElement = array[randomItem];
+                array[randomItem] = array[i];
+                array[i] = shuffledElement;
+            }
+        }
+    }
+}
