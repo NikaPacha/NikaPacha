@@ -1,0 +1,71 @@
+using System;
+
+namespace Уроки
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int positionHealthBarX = 0;
+            int positionHealthBarY = 3;
+            int positionManaBarX = 0;
+            int positionManaBarY = 4;
+
+            int barLenght = 10;
+
+            float percentageOfHealth;
+            float percentageOfMana;
+
+            Console.Write("Введите процент ХП: ");
+            percentageOfHealth = Convert.ToSingle(Console.ReadLine());
+
+            Console.Write("Введите процент Маны: ");
+            percentageOfMana = Convert.ToSingle(Console.ReadLine());
+
+            DrawStatusBar(positionHealthBarX, positionHealthBarY, percentageOfHealth, barLenght);
+            DrawStatusBar(positionManaBarX, positionManaBarY, percentageOfMana, barLenght);
+        }
+
+        static void DrawStatusBar(int positionBarX, int positionBarY, float percentageOfFilling, int barLength, char fullBarSymbol = '#', char emptyBarSymbol = '_')
+        {
+
+            char leftBracket = '[';
+            char rightBracket = ']';
+
+            int maxValue = 100;
+            int minValue = 0;
+            int emptyBarLenght;
+
+            int maxPercent = 100;
+            int percentComplete;
+
+            if (percentageOfFilling > maxValue)
+            {
+                percentageOfFilling = maxValue;
+            }
+            else if (percentageOfFilling < minValue)
+            {
+                percentageOfFilling = minValue;
+            }
+
+            percentComplete = (int)Math.Round((percentageOfFilling / maxPercent) * barLength);
+            emptyBarLenght = barLength - percentComplete;
+
+            Console.SetCursorPosition(positionBarX, positionBarY);
+            Console.Write(leftBracket);
+
+            FillBar(percentComplete, fullBarSymbol);
+            FillBar(emptyBarLenght, emptyBarSymbol);
+
+            Console.Write(rightBracket + "\n");
+        }
+
+        static void FillBar(int lenght, char symbol)
+        {
+            for (int i = 0; i < lenght; i++)
+            {
+                Console.Write(symbol);
+            }
+        }
+    }
+}
