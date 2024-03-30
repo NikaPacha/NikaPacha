@@ -1,0 +1,154 @@
+using System;
+
+namespace C_Light
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            const string AddDossierCommand = "1";
+            const string CommandToDisplayAllDossiers = "2";
+            const string DeleteDossierCommand = "3";
+            const string LastNameSearchCommand = "4";
+            const string ExitCommand = "5";
+
+            string[] positions = new string[0];
+            string[] fullNames = new string[0];
+            bool isExitProgram = true;
+
+            while (isExitProgram)
+            {
+                Console.Clear();
+                Console.WriteLine($"{AddDossierCommand}<---Добавить досье");
+                Console.WriteLine($"{CommandToDisplayAllDossiers}<---Вывод всех досье на экран с их ID в программе ");
+                Console.WriteLine($"{DeleteDossierCommand}<--- Удалить досье по индексу ");
+                Console.WriteLine($"{LastNameSearchCommand}<--- Поиск досье по ФИО");
+                Console.WriteLine($"{ExitCommand}<---Выход из программы");
+
+                switch (Console.ReadLine())
+                {
+                    case AddDossierCommand:
+                        AddDossier(ref fullNames, ref positions);
+                        break;
+
+                    case CommandToDisplayAllDossiers:
+                        ShowAllDossiers(positions, fullNames);
+                        break;
+
+                    case DeleteDossierCommand:
+                        DeleteDossier(ref fullNames, ref positions);
+                        break;
+
+                    case LastNameSearchCommand:
+                        SearchDossier(fullNames, positions);
+                        break;
+
+                    case ExitCommand:
+                        isExitProgram = false;
+                        break;
+
+                }
+
+                Console.Write("Нажмите любую кнопку для того чтобы продолжить...");
+                Console.ReadKey();
+            }
+        }
+
+        private static void AddDossier(ref string[] names, ref string[] positions)
+        {
+            Console.WriteLine("Введите ФИО сотрудника");
+            string name = Console.ReadLine();
+            Console.WriteLine("Введите должность сотрудника");
+            string position = Console.ReadLine();
+
+            names = IncreasArray(names, name);
+            positions = IncreasArray(positions, position);
+        }
+
+        private static string[] IncreasArray(string[] array, string text)
+        {
+            string[] temporaryArray = new string[array.Length + 1];
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                temporaryArray[i] = array[i];
+            }
+
+            temporaryArray[temporaryArray.Length - 1] = text;
+            array = temporaryArray;
+            return array;
+        }
+
+        private static void ShowAllDossiers(string[] positions, string[] fullNames)
+        {
+            int index = 1;
+
+            for (int i = 0; i < positions.Length; i++)
+            {
+                Console.WriteLine($" Индекс [ {index} ] | ФИО : {fullNames[i]} | должность : {positions[i]}");
+                index++;
+            }
+        }
+
+        private static void DeleteDossier(ref string[] fullNames, ref string[] positions)
+        {
+            Console.Write("Введите номер досье :");
+            int number = int.Parse(Console.ReadLine());
+
+            if (number > 0 && number <= fullNames.Length)
+            {
+                int index = number - 1;
+                fullNames = DecreaseArray(fullNames, index);
+                positions = DecreaseArray(positions, index);
+                Console.WriteLine($"Досье с индексом [ {number} ] удалино!!!");
+            }
+            else
+            {
+                Console.WriteLine("Досье с таким номером не существует!!!");
+            }
+        }
+
+        private static string[] DecreaseArray(string[] array, int index)
+        {
+            string[] temporaryArray = new string[array.Length - 1];
+
+            for (int i = 0; i < index; i++)
+            {
+                temporaryArray[i] = array[i];
+            }
+
+            for (int i = index; i < array.Length - 1; i++)
+            {
+                temporaryArray[i] = array[i + 1];
+            }
+
+            array = temporaryArray;
+            return array;
+        }
+
+        private static void SearchDossier(string[] fullNames, string[] positions)
+        {
+            Console.WriteLine("Введите фамилию для поиска досье");
+            string surname = Console.ReadLine();
+            bool isSuccessfulSearch=false;
+
+            for (int i = 0; i < fullNames.Length; i++)
+            {
+                string[] split = fullNames[i].Split(' ');
+
+                if (split[0].ToLower() == surname.ToLower())
+                {
+                    Console.WriteLine($"Индекс [ {i + 1} ] | ФИО : {fullNames[i]} | должность : {positions[i]}");
+                    isSuccessfulSearch= true;
+                }
+            }
+
+            if (isSuccessfulSearch == false)
+            {                              
+                    Console.WriteLine($"Досье сотрудников с фамилией '{surname}' не найдено!!!");                
+            }
+
+            Console.WriteLine(new string('-', 40));
+        }
+    }
+}
