@@ -14,7 +14,7 @@ namespace C_Light
 
             string[] positions = new string[0];
             string[] fullNames = new string[0];
-            bool isExitProgram = true;
+            bool isExitProgram = false;
 
             while (isExitProgram)
             {
@@ -44,7 +44,7 @@ namespace C_Light
                         break;
 
                     case ExitCommand:
-                        isExitProgram = false;
+                        isExitProgram = true;
                         break;
 
                 }
