@@ -93,7 +93,8 @@ namespace C_Light
         private static void DeleteDossier(ref string[] fullNames, ref string[] positions)
         {
             Console.Write("Введите номер досье :");
-            int number = int.Parse(Console.ReadLine());
+            int number;
+            int.TryParse(Console.ReadLine(), out number);
 
             if (number > 0 && number <= fullNames.Length)
             {
@@ -130,7 +131,7 @@ namespace C_Light
         {
             Console.WriteLine("Введите фамилию для поиска досье");
             string surname = Console.ReadLine();
-            bool isSuccessfulSearch=false;
+            bool isSuccessfulSearch = false;
 
             for (int i = 0; i < fullNames.Length; i++)
             {
@@ -139,13 +140,13 @@ namespace C_Light
                 if (split[0].ToLower() == surname.ToLower())
                 {
                     Console.WriteLine($"Индекс [ {i + 1} ] | ФИО : {fullNames[i]} | должность : {positions[i]}");
-                    isSuccessfulSearch= true;
+                    isSuccessfulSearch = true;
                 }
             }
 
             if (isSuccessfulSearch == false)
-            {                              
-                    Console.WriteLine($"Досье сотрудников с фамилией '{surname}' не найдено!!!");                
+            {
+                Console.WriteLine($"Досье сотрудников с фамилией '{surname}' не найдено!!!");
             }
 
             Console.WriteLine(new string('-', 40));
