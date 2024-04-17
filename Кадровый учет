@@ -14,7 +14,7 @@ namespace C_Light
 
             string[] positions = new string[0];
             string[] fullNames = new string[0];
-            bool isExitProgram = false;
+            bool isExitProgram = true;
 
             while (isExitProgram)
             {
@@ -44,7 +44,7 @@ namespace C_Light
                         break;
 
                     case ExitCommand:
-                        isExitProgram = true;
+                        isExitProgram = false;
                         break;
 
                 }
@@ -135,7 +135,7 @@ namespace C_Light
 
             for (int i = 0; i < fullNames.Length; i++)
             {
-                string[] split = fullNames[i].Split(' ');
+                string[] split = fullNames[i].Split();
 
                 if (split[0].ToLower() == surname.ToLower())
                 {
