@@ -1,0 +1,77 @@
+using System;
+using System.Collections.Generic;
+
+namespace Csharp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Queue<int> priceProducts = new Queue<int>();
+
+            AddInformationProduct(priceProducts);
+            OutputInformation(priceProducts);
+        }
+        static void OutputInformation(Queue<int> priceProducts)
+        {
+            bool isRunning = true;
+            int bank = 0;
+
+            while (isRunning)
+            {
+                Queue<string> shopper = new Queue<string>();
+
+               AddInformationShopper(shopper);
+
+                for (int i = 0; i < shopper.Count;)
+                {
+                    Console.WriteLine($"\nCчёт в кассе: {bank}\n");                   
+
+                    foreach (var priceProduct in priceProducts)
+                    {
+                        Console.WriteLine($"{shopper.Dequeue()} покупает товар на {priceProducts.Peek()} рублей\n");
+                        break;
+                    }
+
+                    bank += priceProducts.Dequeue();
+
+                    Console.WriteLine("Для продолжения нажмите любую клавишу");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+
+                if (shopper.Count == 0)
+                {
+                    Console.WriteLine($"Cчёт в кассе: {bank}\n");
+                    Console.WriteLine($"В очереде не осталось людей\n");
+                }
+
+                isRunning = false;
+            }
+        }
+
+        static void AddInformationProduct(Queue<int> priceProducts)
+        {
+            priceProducts.Enqueue(20);
+            priceProducts.Enqueue(35);
+            priceProducts.Enqueue(45);
+            priceProducts.Enqueue(100);
+        }
+
+        static void AddInformationShopper(Queue<string> person)
+        {
+            person.Enqueue("Коля");
+            person.Enqueue("Катя");
+            person.Enqueue("Ася");
+            person.Enqueue("Паша");
+
+            Console.WriteLine("Магазин");
+            Console.WriteLine("\nОчередь перед кассой:\n");
+
+            foreach (var item in person)
+            {
+                Console.WriteLine(item);
+            }   
+        }
+    }
+}
