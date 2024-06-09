@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Security.Cryptography;
+
+namespace Csharp
+{
+
+
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+            string userInput;
+
+            Dictionary<string, string> countriesCapitalls = new Dictionary<string, string>();
+
+            Console.WriteLine("Список стран и их столиц:");
+
+            countriesCapitalls.Add("Россия", "Москва"); 
+            countriesCapitalls.Add("Франция", "Париж");
+            countriesCapitalls.Add("Англия", "Лондон");
+
+            foreach (var item in countriesCapitalls)
+            {
+                Console.WriteLine($"Страна - {item.Key}, столица - {item.Value}");
+            }
+
+            Console.WriteLine("введите страну:");
+
+            string userInpuе = Console.ReadLine();
+
+            if (countriesCapitalls.ContainsKey(userInpuе))
+            {
+                Console.WriteLine("Сталица этой страны - " + countriesCapitalls[userInpuе]);
+            }
+            else
+            {
+                Console.WriteLine("Информация отсутстыует\n");
+            }
+
+        }
+    }
+}
