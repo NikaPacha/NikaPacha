@@ -1,0 +1,101 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp3
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            const string AddFileCommand = "1";
+            const string ViewAllFilesCommand = "2";
+            const string DeleteFileCommand = "3";
+            const string ExitCommand = "4";
+
+            bool isWorking = true;
+            Dictionary<string, string> information = new Dictionary<string, string>();
+
+            information.Add("Иванов Иван Иваныч", "Уборщик");
+            information.Add("Петров Пётр Петрович", "Электрик");
+            information.Add("Михайлов Михаил Михайлович", "ГенДир");
+
+            Console.WriteLine($"{AddFileCommand} - добавить досье.");
+            Console.WriteLine($"{ViewAllFilesCommand} - показать все досье.");
+            Console.WriteLine($"{DeleteFileCommand} - удалить досье.");
+            Console.WriteLine($"{ExitCommand} - выйти из программы.");
+
+            while (isWorking)
+            {
+                Console.WriteLine("\nВедите команду: ");
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case AddFileCommand:
+                        AddFile(information);
+                        break;
+
+                    case ViewAllFilesCommand:
+                        ViewAllFiles(information);
+                        break;
+
+                    case DeleteFileCommand:
+                        DeleteFile(information);
+                        break;
+
+                    case ExitCommand:
+                        Console.WriteLine("Досвидания.");
+                        isWorking = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Неверный ввод, попробуйте еще раз.");
+                        break;
+                }
+            }
+        }
+
+        static void AddFile(Dictionary<string, string> information)
+        {
+            Console.WriteLine("Введите имя сотрудника:");
+            string fullName = Console.ReadLine();
+
+            if (information.ContainsKey(fullName))
+            {
+                Console.WriteLine("Этот сотрудник уже есть в базе.");
+            }
+            else
+            {
+                Console.WriteLine("Введите должность сотрудника:");
+                string post = Console.ReadLine();
+
+                information.Add(fullName, post);
+                Console.WriteLine("Сотрудник добавлен в базу.");
+            }
+        }
+
+        static void ViewAllFiles(Dictionary<string, string> information)
+        {
+            foreach (var item in information)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        static void DeleteFile(Dictionary<string, string> information)
+        {
+            Console.WriteLine("Введите имя сотрудника для удаления:");
+            string fullName = Console.ReadLine();
+
+            if (information.ContainsKey(fullName))
+            {
+                information.Remove(fullName);
+                Console.WriteLine("Сотрудник удален из базы.");
+            }
+            else
+            {
+                Console.WriteLine("Неверный ввод.");
+            }
+        }
+    }
+}
