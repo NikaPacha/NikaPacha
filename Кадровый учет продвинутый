@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ConsoleApp3
 {
@@ -13,11 +17,11 @@ namespace ConsoleApp3
             const string ExitCommand = "4";
 
             bool isWorking = true;
-            Dictionary<string, string> information = new Dictionary<string, string>();
-
-            information.Add("Иванов Иван Иваныч", "Уборщик");
-            information.Add("Петров Пётр Петрович", "Электрик");
-            information.Add("Михайлов Михаил Михайлович", "ГенДир");
+            Dictionary<string, List<string>>information = new Dictionary<string, List<string>>();
+        
+            information.Add("Уборщик", new List<string> {"Иванов Иван Иваныч"});
+            information.Add("Электрик", new List<string> {"Петров Пётр Петрович, Александрова Александра Александровна"});
+            information.Add("ГенДир", new List<string> {"Михайлов Михаил Михайлович"});
 
             Console.WriteLine($"{AddFileCommand} - добавить досье.");
             Console.WriteLine($"{ViewAllFilesCommand} - показать все досье.");
@@ -55,7 +59,7 @@ namespace ConsoleApp3
             }
         }
 
-        static void AddFile(Dictionary<string, string> information)
+        static void AddFile(Dictionary<string, List<string>> information)
         {
             Console.WriteLine("Введите имя сотрудника:");
             string fullName = Console.ReadLine();
@@ -69,20 +73,24 @@ namespace ConsoleApp3
                 Console.WriteLine("Введите должность сотрудника:");
                 string post = Console.ReadLine();
 
-                information.Add(fullName, post);
+                information.Add(fullName, new List<string> {post});
                 Console.WriteLine("Сотрудник добавлен в базу.");
             }
         }
 
-        static void ViewAllFiles(Dictionary<string, string> information)
+        private static void ViewAllFiles(Dictionary<string, List<string>> information)
         {
-            foreach (var item in information)
+            foreach (var (key, value) in information)
             {
-                Console.WriteLine(item);
+                Console.WriteLine($"на должности {key} работает:");
+                foreach (var item in key)
+                {
+                    Console.WriteLine($"\n{item}");
+                }
             }
         }
 
-        static void DeleteFile(Dictionary<string, string> information)
+        static void DeleteFile(Dictionary<string, List<string>> information)
         {
             Console.WriteLine("Введите имя сотрудника для удаления:");
             string fullName = Console.ReadLine();
