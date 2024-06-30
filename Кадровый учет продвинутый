@@ -1,9 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApp3
 {
@@ -18,10 +14,10 @@ namespace ConsoleApp3
 
             bool isWorking = true;
             Dictionary<string, List<string>>information = new Dictionary<string, List<string>>();
-        
-            information.Add("Уборщик", new List<string> {"Иванов Иван Иваныч"});
-            information.Add("Электрик", new List<string> {"Петров Пётр Петрович, Александрова Александра Александровна"});
-            information.Add("ГенДир", new List<string> {"Михайлов Михаил Михайлович"});
+
+            information.Add("Иванов Иван Иваныч", new List<string> {"Кборщик"});
+            information.Add("Петров Пётр Петрович, Александрова Александра Александровна", new List<string> {"Электрик"});
+            information.Add("Михайлов Михаил Михайлович", new List<string> {"ГенДир"});
 
             Console.WriteLine($"{AddFileCommand} - добавить досье.");
             Console.WriteLine($"{ViewAllFilesCommand} - показать все досье.");
@@ -59,38 +55,35 @@ namespace ConsoleApp3
             }
         }
 
-        static void AddFile(Dictionary<string, List<string>> information)
+        static void AddFile(Dictionary<string, List<string>>information)
         {
             Console.WriteLine("Введите имя сотрудника:");
             string fullName = Console.ReadLine();
+            Console.WriteLine("Введите должность сотрудника:");
+            string post = Console.ReadLine();
 
-            if (information.ContainsKey(fullName))
+            if (information.ContainsKey(post))
             {
-                Console.WriteLine("Этот сотрудник уже есть в базе.");
+                List<string> workers = information[post];
+                workers.Add(fullName);
+                Console.WriteLine("Сотрудник добавлен в базу.");
             }
             else
             {
-                Console.WriteLine("Введите должность сотрудника:");
-                string post = Console.ReadLine();
-
-                information.Add(fullName, new List<string> {post});
+                information.Add(fullName, new List<string> { post });
                 Console.WriteLine("Сотрудник добавлен в базу.");
             }
         }
 
-        private static void ViewAllFiles(Dictionary<string, List<string>> information)
+        private static void ViewAllFiles(Dictionary<string, List<string>>information)
         {
-            foreach (var (key, value) in information)
+            foreach (var item in information)
             {
-                Console.WriteLine($"на должности {key} работает:");
-                foreach (var item in key)
-                {
-                    Console.WriteLine($"\n{item}");
-                }
+                Console.WriteLine($"Сотрудник {item.Key} работает на должности {item.Value} ");
             }
         }
 
-        static void DeleteFile(Dictionary<string, List<string>> information)
+        static void DeleteFile(Dictionary<string, List<string>>information)
         {
             Console.WriteLine("Введите имя сотрудника для удаления:");
             string fullName = Console.ReadLine();
