@@ -1,0 +1,120 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp3
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            const string CommandAddWorker = "1";
+            const string CommandDisplayAllWorkers = "2";
+            const string CommandRemoveWorker = "3";
+            const string CommandExit = "4";
+
+            Dictionary<string, string> workers = new Dictionary<string, string>()
+            {
+                { "Иванов Иван Иваныч", "Директор" },
+                { "Петров Пётр Петрович", "Заместитель" },
+                { "Михайлов Михаил Михайлович", "Водитель"},
+                { "Александрова Александра Александрвна", "Оператор"},
+                { "Алексеев Алексей Алексеевич", "Бухгалтер"}
+            };
+
+            bool isRunning = true;
+
+            while (isRunning)
+            {
+                Console.Clear();
+
+                Console.WriteLine($"{CommandAddWorker} - Добавить сотрудника");
+                Console.WriteLine($"{CommandDisplayAllWorkers} - Показать всех сотрудников");
+                Console.WriteLine($"{CommandRemoveWorker} - Удалить сотрудника");
+                Console.WriteLine($"{CommandExit} - Выход");
+
+                switch (Console.ReadLine())
+                {
+                    case CommandAddWorker:
+                        AddWorker(workers);
+                        break;
+
+                    case CommandDisplayAllWorkers:
+                        DisplayAllWorkers(workers);
+                        break;
+
+                    case CommandRemoveWorker:
+                        RemoveWorker(workers);
+                        break;
+
+                    case CommandExit:
+                        isRunning = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Нет такой команды!");
+                        break;
+                }
+
+                Console.ReadKey();
+            }
+        }
+
+        static void AddWorker(Dictionary<string, string> workers)
+        {
+            Console.Write("Введите фамилию: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Введите должность: ");
+            string jobTitle = Console.ReadLine();
+
+            if (CanBeHired(workers, name, jobTitle))
+            {
+                workers.Add(name, jobTitle);
+                Console.WriteLine("Сотрудник добавлен.");
+            }
+        }
+
+        static bool CanBeHired(Dictionary<string, string> workers, string name, string jobTitle)
+        {
+            if (workers.ContainsKey(name))
+            {
+                Console.WriteLine("Сотрудник уже в базе данных");
+                return false;
+            }
+
+            if (workers.ContainsValue(jobTitle))
+            {
+                Console.WriteLine("Должность уже занята");
+                return false;
+            }
+
+            return true;
+        }
+
+        static void DisplayAllWorkers(Dictionary<string, string> workers)
+        {
+            Console.WriteLine("Сотрудники:");
+
+            foreach (var worker in workers)
+            {
+                Console.WriteLine($"{worker.Key} - {worker.Value}");
+            }
+        }
+
+        static void RemoveWorker(Dictionary<string, string> workers)
+        {
+            Console.Write("Введите фамилию сотрудника: ");
+            string nameToDelete = Console.ReadLine();
+
+            if (workers.ContainsKey(nameToDelete))
+            {
+                workers.Remove(nameToDelete);
+                Console.WriteLine("Сотрудник удален!");
+            }
+            else
+            {
+                Console.WriteLine("Такого сотрудника нет!");
+            }
+        }
+    }
+}
