@@ -15,8 +15,9 @@ namespace ConsoleApp3
             bool isWorking = true;
             Dictionary<string, List<string>>information = new Dictionary<string, List<string>>();
 
-            information.Add("Иванов Иван Иваныч", new List<string> {"Кборщик"});
-            information.Add("Петров Пётр Петрович, Александрова Александра Александровна", new List<string> {"Электрик"});
+            information.Add("Иванов Иван Иваныч", new List<string> {"Уборщик"});
+            information.Add("Петров Пётр Петрович", new List<string> {"Электрик"});
+            information.Add("Александрова Александра Александровна", new List<string> {"Электрик"});
             information.Add("Михайлов Михаил Михайлович", new List<string> {"ГенДир"});
 
             Console.WriteLine($"{AddFileCommand} - добавить досье.");
@@ -70,7 +71,7 @@ namespace ConsoleApp3
             }
             else
             {
-                information.Add(fullName, new List<string> { post });
+                information.Add(fullName, new List<string> {post});
                 Console.WriteLine("Сотрудник добавлен в базу.");
             }
         }
@@ -91,11 +92,11 @@ namespace ConsoleApp3
             if (information.ContainsKey(fullName))
             {
                 information.Remove(fullName);
-                Console.WriteLine("Сотрудник удален из базы.");
+                Console.WriteLine("сотрудник удален из базы.");
             }
             else
             {
-                Console.WriteLine("Неверный ввод.");
+                Console.WriteLine("неверный ввод.");
             }
         }
     }
