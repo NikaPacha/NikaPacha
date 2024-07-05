@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConsoleApp3
 {
-    internal class Program
+    internal class Programm
     {
         static void Main(string[] args)
         {
@@ -12,92 +12,111 @@ namespace ConsoleApp3
             const string DeleteFileCommand = "3";
             const string ExitCommand = "4";
 
-            bool isWorking = true;
-            Dictionary<string, List<string>>information = new Dictionary<string, List<string>>();
+            bool isWork = true;
+            string input;
 
-            information.Add("Иванов Иван Иваныч", new List<string> {"Уборщик"});
-            information.Add("Петров Пётр Петрович", new List<string> {"Электрик"});
-            information.Add("Александрова Александра Александровна", new List<string> {"Электрик"});
-            information.Add("Михайлов Михаил Михайлович", new List<string> {"ГенДир"});
+            Dictionary<string, List<string>> information = new Dictionary<string, List<string>>();
 
-            Console.WriteLine($"{AddFileCommand} - добавить досье.");
-            Console.WriteLine($"{ViewAllFilesCommand} - показать все досье.");
-            Console.WriteLine($"{DeleteFileCommand} - удалить досье.");
-            Console.WriteLine($"{ExitCommand} - выйти из программы.");
+            information.Add("Уборщик", new List<string> { "Иванов Иван Иваныч" });
+            information.Add("Электрик", new List<string> { "Петров Пётр Петрович" });
+            information.Add("Охраник", new List<string> { "Александрова Александра Александровна" });
+            information.Add("ГенДир", new List<string> { "Михайлов Михаил Михайлович" });
 
-            while (isWorking)
+            while (isWork)
             {
-                Console.WriteLine("\nВедите команду: ");
-                string userInput = Console.ReadLine();
+                Console.WriteLine($"{AddFileCommand} - добавить досье.");
+                Console.WriteLine($"{ViewAllFilesCommand} - показать все досье.");
+                Console.WriteLine($"{DeleteFileCommand} - удалить досье.");
+                Console.WriteLine($"{ExitCommand} - выйти из программы.");
+                Console.Write("Введиту команду: ");
+                input = Console.ReadLine();
 
-                switch (userInput)
+                switch (input)
                 {
                     case AddFileCommand:
                         AddFile(information);
-                        break;
-
-                    case ViewAllFilesCommand:
-                        ViewAllFiles(information);
                         break;
 
                     case DeleteFileCommand:
                         DeleteFile(information);
                         break;
 
-                    case ExitCommand:
-                        Console.WriteLine("Досвидания.");
-                        isWorking = false;
+                    case ViewAllFilesCommand:
+                        ViewAllFiles(information);
                         break;
 
-                    default:
-                        Console.WriteLine("Неверный ввод, попробуйте еще раз.");
+                    case ExitCommand:
+                        isWork = false;
                         break;
                 }
             }
         }
 
-        static void AddFile(Dictionary<string, List<string>>information)
+        static void AddFile(Dictionary<string, List<string>> information)
         {
-            Console.WriteLine("Введите имя сотрудника:");
-            string fullName = Console.ReadLine();
-            Console.WriteLine("Введите должность сотрудника:");
+            Console.Write("Введите Провессию: ");
             string post = Console.ReadLine();
 
-            if (information.ContainsKey(post))
-            {
-                List<string> workers = information[post];
-                workers.Add(fullName);
-                Console.WriteLine("Сотрудник добавлен в базу.");
-            }
-            else
-            {
-                information.Add(fullName, new List<string> {post});
-                Console.WriteLine("Сотрудник добавлен в базу.");
-            }
-        }
-
-        private static void ViewAllFiles(Dictionary<string, List<string>>information)
-        {
-            foreach (var item in information)
-            {
-                Console.WriteLine($"Сотрудник {item.Key} работает на должности {item.Value} ");
-            }
-        }
-
-        static void DeleteFile(Dictionary<string, List<string>>information)
-        {
-            Console.WriteLine("Введите имя сотрудника для удаления:");
+            Console.Write("Введите имя: ");
             string fullName = Console.ReadLine();
 
-            if (information.ContainsKey(fullName))
+            if (information.ContainsKey(post) == false)
             {
-                information.Remove(fullName);
-                Console.WriteLine("сотрудник удален из базы.");
+                information.Add(post, new List<string>());
+            }
+
+            information[post].Add(fullName);
+            Console.Clear();
+        }
+
+        static void ViewAllFiles(Dictionary<string, List<string>> information)
+        {
+            foreach (var post in information)
+            {
+                foreach (var fullName in post.Value)
+                {
+                    Console.WriteLine(information[post.Key].IndexOf(fullName) + 1 + ". " + ($"{post.Key} - {fullName}."));
+                }
+            }
+            Console.ReadKey();
+        }
+
+        static void DeleteFile(Dictionary<string, List<string>> information)
+        {
+            int index;
+
+            Console.WriteLine("Введите должность:");
+            string postForRemove = Console.ReadLine();
+
+            if (information.ContainsKey(postForRemove))
+            {
+                Console.Write("Введите порядковый номер сотрудника для удаления: ");
+                index = ReadInt(information[postForRemove].Count);
+                information[postForRemove].RemoveAt(index - 1);
             }
             else
             {
-                Console.WriteLine("неверный ввод.");
+                Console.WriteLine("Такой должности нет.");
             }
+
+            if (information[postForRemove].Count == 0)
+            {
+                information.Remove(postForRemove);
+            }
+
+            Console.Clear();
+        }
+
+        static int ReadInt(int profilesLenght)
+        {
+            int index = 0;
+
+            while (int.TryParse(Console.ReadLine(), out index) == false && index < profilesLenght)
+            {
+                Console.WriteLine("Нет такого индекса.");
+            }
+
+            return index;
         }
     }
 }
