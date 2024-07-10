@@ -1,138 +1,168 @@
 using System;
 
-namespace CSharp
+namespace TryParse
 {
-    class Program
+    internal class Programm
     {
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
-            bool isPlaying = true;
-            int userPositionX;
-            int userPositionY;
-            int userDirectionX = 0;
-            int userDirectionY = 0;
-            int allDots = 0;
-            int collectDots = 0;
 
-            char[,] map = ReadMap(out userPositionX, out userPositionY, ref allDots);
+            int startPositionX = 1;
+            int startPositionY = 1;
 
-            DrawMap(map);
+            char heroSymbol = '@';
+            char wallSymbol = '#';
+            char coinSymbol = '°';
+            char freeMapSymbol = ' ';
 
-            while (isPlaying)
+            int mapWeight = 20;
+            int mapHeight = 10;
+
+            char[,] map;
+            map = MapGenerator(mapHeight, mapWeight, wallSymbol, coinSymbol, freeMapSymbol);
+
+            int mapCoins;
+            int bagCoin = 0;
+            mapCoins = GetCoinsCount(map);
+
+            int[] heroPosition = SpawnHero(startPositionX, startPositionY);
+
+
+            while (mapCoins > bagCoin)
             {
-                Console.SetCursorPosition(0, 15);
-                Console.WriteLine($"Собранно звёздочек {collectDots} из {allDots}");
+                Console.Clear();
 
-                if (Console.KeyAvailable)
-                {
-                    ConsoleKeyInfo key = Console.ReadKey(true);
+                Console.SetCursorPosition(mapWeight + 1, 0);
+                Console.WriteLine($"Score: {bagCoin}");
 
-                    ChangeDirection(key, ref userDirectionX, ref userDirectionY);
+                Console.SetCursorPosition(0, 0);
+                DrawMap(map);
 
-                    if (map[userPositionX + userDirectionX, userPositionY + userDirectionY] != '#')
-                    {
-                        Move(ref userPositionX, ref userPositionY, userDirectionX, userDirectionY);
+                Console.SetCursorPosition(heroPosition[0], heroPosition[1]);
+                Console.WriteLine(heroSymbol);
 
-                        CollectDots(map, userPositionX, userPositionY, ref collectDots);
-                    }
-                }
-
-                if (collectDots == allDots)
-                {
-                    Console.Clear();
-                    isPlaying = false;
-                    Console.WriteLine("GAME OVER!!!");
-                }
+                MoveHero(ref map, ref heroPosition, wallSymbol);
+                SelectionCoin(ref bagCoin, ref map, heroPosition, coinSymbol, freeMapSymbol);
             }
+
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("Поздравляю! Вы собрали все монеты");
         }
 
-        static void ChangeDirection(ConsoleKeyInfo key, ref int directionX, ref int directionY)
+        static char[,] MapGenerator(int mapHeight, int mapWeight, char wallSymbol, char coinSymbol, char freeMapSymbol)
         {
-            switch (key.Key)
-            {
-                case ConsoleKey.UpArrow:
-                    directionX = -1;
-                    directionY = 0;
-                    break;
+            int minRandomValue = 0;
+            int maxRandomValue = 10;
 
-                case ConsoleKey.DownArrow:
-                    directionX = 1;
-                    directionY = 0;
-                    break;
+            int mapIndex;
+            int valueForWall = 1;
+            int valueForCoin = 4;
 
-                case ConsoleKey.LeftArrow:
-                    directionX = 0;
-                    directionY = -1;
-                    break;
+            char[,] map = new char[mapHeight, mapWeight];
 
-                case ConsoleKey.RightArrow:
-                    directionX = 0;
-                    directionY = 1;
-                    break;
-            }
-        }
-
-        static void Move(ref int positionX, ref int positionY, int directionX, int directionY)
-        {
-            Console.SetCursorPosition(positionY, positionX);
-            Console.Write(" ");
-
-            positionX += directionX;
-            positionY += directionY;
-
-            Console.SetCursorPosition(positionY, positionX);
-            Console.Write('@');
-        }
-
-        static void CollectDots(char[,] map, int positionX, int positionY, ref int collectDots)
-        {
-            if (map[positionX, positionY] == '*')
-            {
-                collectDots++;
-                map[positionX, positionY] = ' ';
-            }
-        }
-
-        static char[,] ReadMap(out int positionX, out int positionY, ref int allDots)
-        {
-            positionX = 0;
-            positionY = 0;
-
-            char[,] map =
-            {
-                {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-                {'#', '@', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', '*', '#'},
-                {'#', '*', '#', '*', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', '#', '#'},
-                {'#', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', '#', '#'},
-                {'#', ' ', '#', ' ', ' ', ' ', ' ', '#', ' ', ' ', '#', ' ', ' ', '#'},
-                {'#', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', '#', ' ', ' ', '#'},
-                {'#', ' ', ' ', ' ', ' ', ' ', ' ', '#', '#', '#', '#', '#', ' ', '#'},
-                {'#', '*', '#', ' ', ' ', ' ', ' ', '#', '#', ' ', ' ', '#', ' ', '#'},
-                {'#', ' ', '#', '*', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', '#'},
-                {'#', ' ', '#', '#', '#', ' ', ' ', ' ', ' ', '*', ' ', '#', ' ', '#'},
-                {'#', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', '#'},
-                {'#', ' ', ' ', '*', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'},
-                {'#', '*', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '*', '#'},
-                {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'}
-            };
+            Random random = new Random();
 
             for (int i = 0; i < map.GetLength(0); i++)
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    if (map[i, j] == '@')
+                    mapIndex = random.Next(minRandomValue, maxRandomValue);
+
+                    if (j == 0 || j == map.GetLength(1) - 1 || i == 0 || i == map.GetLength(0) - 1 || mapIndex == valueForWall)
                     {
-                        positionX = i;
-                        positionY = j;
+                        map[i, j] = wallSymbol;
                     }
-                    else if (map[i, j] == '*')
+                    else if (mapIndex % valueForCoin == 0)
                     {
-                        allDots++;
+                        map[i, j] = coinSymbol;
+                    }
+                    else
+                    {
+                        map[i, j] = freeMapSymbol;
                     }
                 }
             }
+
             return map;
+        }
+
+        static int[] SpawnHero(int startPositionX, int startPositionY)
+        {
+            int[] position = { startPositionX, startPositionY };
+
+            return position;
+        }
+
+        static int GetCoinsCount(char[,] map)
+        {
+            int mapCoins = 0;
+
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    if (map[i, j] == '°')
+                    {
+                        mapCoins++;
+                    }
+                }
+            }
+
+            return mapCoins;
+        }
+
+        static void MoveHero(ref char[,] map, ref int[] heroPosition, char wallSymbol)
+        {
+            int nextHeroPositionX;
+            int nextHeroPositionY;
+
+            int[] direction;
+            GetDirection(out direction);
+
+            nextHeroPositionX = heroPosition[0] + direction[0];
+            nextHeroPositionY = heroPosition[1] + direction[1];
+
+            if (map[nextHeroPositionY, nextHeroPositionX] != wallSymbol)
+            {
+                heroPosition[0] = nextHeroPositionX;
+                heroPosition[1] = nextHeroPositionY;
+            }
+        }
+
+        static void SelectionCoin(ref int bagCoin, ref char[,] map, int[] heroPosition, char coinSymbol, char freeMapSymbol)
+        {
+            if (map[heroPosition[1], heroPosition[0]] == coinSymbol)
+            {
+                map[heroPosition[1], heroPosition[0]] = freeMapSymbol;
+                bagCoin++;
+            }
+        }
+
+        static void GetDirection(out int[] direction)
+        {
+            ConsoleKeyInfo key = Console.ReadKey();
+            direction = new int[2];
+
+            switch (key.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    direction[1] = -1;
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    direction[1] = 1;
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    direction[0] = -1;
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    direction[0] = 1;
+                    break;
+            }
         }
 
         static void DrawMap(char[,] map)
@@ -143,6 +173,7 @@ namespace CSharp
                 {
                     Console.Write(map[i, j]);
                 }
+
                 Console.WriteLine();
             }
         }
