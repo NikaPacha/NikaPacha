@@ -1,0 +1,32 @@
+using System;
+using System.Collections.Generic;
+
+namespace TryParse
+{
+    internal class Programm
+    {
+        static void Main(string[] args)
+        {
+            string[] line1 = { "1", "2", "1" };
+            string[] line2 = { "3", "2" };
+
+            List<string> strings = new List<string>();
+
+            strings.AddRange(line1);
+            strings.AddRange(line2);
+
+            for (int i = 0; i < strings.Count; i++)
+            {
+                for (int j = i + 1; j < strings.Count; j++)
+                {
+                    if (strings[i] == strings[j])
+                    {
+                        strings.RemoveAt(j);
+                    }
+                }
+
+                Console.WriteLine(strings[i]);
+            }
+        }      
+    }
+}
