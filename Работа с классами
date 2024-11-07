@@ -1,0 +1,37 @@
+
+public class Program
+{
+
+    static void Main(string[] args)
+    {
+        string playerName = "Bob";
+        int health = 15;
+        int power = 3;
+        float speed = 7.0f;
+
+        Player player = new Player(playerName, health, power, speed);
+        player.ShowInfo();
+    }
+}
+
+class Player
+{
+    public string NickName;
+    public int Health;
+    public int Power;
+    public float Speed;
+
+    public Player(string nickName, int kills, int deaths, float speed)
+    {
+        NickName = nickName;
+        Health = kills;
+        Power = deaths;
+        Speed = speed;
+    }
+
+    public void ShowInfo()
+    {
+        Console.WriteLine($"Имя игрока: {NickName}\n" +
+            $"Здоровье игрока: {Health}\nСила игрока: {Power}\nСкорость игрока {Speed}");
+    }
+}
