@@ -1,15 +1,12 @@
+using System.Collections.Generic;
+using System;
+using System.Runtime.InteropServices;
 
 public class Program
 {
-
     static void Main(string[] args)
     {
-        string playerName = "Bob";
-        int health = 15;
-        int power = 3;
-        float speed = 7.0f;
-
-        Player player = new Player(playerName, health, power, speed);
+        Player player = new Player("Bob", 15, 3, 7.0f);
         player.ShowInfo();
     }
 }
@@ -21,12 +18,17 @@ class Player
     public int Power;
     public float Speed;
 
-    public Player(string nickName, int kills, int deaths, float speed)
+    public Player(string nickName, int health, int power, float speed)
     {
         NickName = nickName;
-        Health = kills;
-        Power = deaths;
+        Health = health;
+        Power = power;
         Speed = speed;
+    }
+
+    public Player()
+    {
+
     }
 
     public void ShowInfo()
