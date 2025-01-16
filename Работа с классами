@@ -13,27 +13,22 @@ public class Program
 
 class Player
 {
-    public string NickName;
-    public int Health;
-    public int Power;
-    public float Speed;
+    private string _nickName;
+    private int _health;
+    private int _power;
+    private float _speed;
 
     public Player(string nickName, int health, int power, float speed)
     {
-        NickName = nickName;
-        Health = health;
-        Power = power;
-        Speed = speed;
-    }
-
-    public Player()
-    {
-
+        _nickName = nickName;
+        _health = health;
+        _power = power;
+        _speed = speed;
     }
 
     public void ShowInfo()
     {
-        Console.WriteLine($"Имя игрока: {NickName}\n" +
-            $"Здоровье игрока: {Health}\nСила игрока: {Power}\nСкорость игрока {Speed}");
+        Console.WriteLine($"Имя игрока: {_nickName}\n" +
+            $"Здоровье игрока: {_health}\nСила игрока: {_power}\nСкорость игрока {_speed}");
     }
 }
