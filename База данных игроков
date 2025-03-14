@@ -1,0 +1,242 @@
+using System;
+using System.Collections.Generic;
+
+namespace уроки
+{
+    internal class Program
+    {
+        public static void Main()
+        {
+            Database database = new Database();
+
+            bool isOn = true;
+
+            const string CommandAddPlayer = "1";
+            const string CommandBannPlayer = "2";
+            const string CommandUnbannPlayer = "3";
+            const string CommandDeletePlayer = "4";
+            const string CommandShowAllPlayers = "5";
+            const string CommandQuit = "0";
+
+            while (isOn)
+            {
+                Console.WriteLine("Выберите действие:");
+                Console.WriteLine($"{CommandAddPlayer} - Добавить игрока");
+                Console.WriteLine($"{CommandBannPlayer} - Забанить игрока");
+                Console.WriteLine($"{CommandUnbannPlayer} - Разбанить игрока");
+                Console.WriteLine($"{CommandDeletePlayer} - Удалить игрока");
+                Console.WriteLine($"{CommandShowAllPlayers} - Показать всех игроков");
+                Console.WriteLine($"{CommandQuit} - Выйти");
+
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case CommandAddPlayer:
+                        database.AddPlayer();
+                        break;
+
+                    case CommandBannPlayer:
+                        database.BannPlayer();
+                        break;
+
+                    case CommandUnbannPlayer:
+                        database.UnbannPlayer();
+                        break;
+
+                    case CommandDeletePlayer:
+                        database.DeletePlayerByNumber();
+                        break;
+
+                    case CommandShowAllPlayers:
+                        database.ShowAllPlayers();
+                        break;
+
+                    case CommandQuit:
+                        isOn = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Нет такого выбора в списке, попробуйте ещё раз");
+                        break;
+                }
+            }
+        }
+    }
+
+    class Database
+    {
+        private readonly Dictionary<string, Player> _players = new Dictionary<string, Player>();
+
+        public void AddPlayer()
+        {
+            Console.Clear();
+
+            Console.WriteLine("Укажите ник-нейм игрока:");
+            string playerNickName = Console.ReadLine();
+
+            Console.WriteLine("Укажите номер игрока:");
+            string playerNumber = Console.ReadLine();
+
+            Console.WriteLine("Укажите уровень игрока:");
+            string playerLevel = Console.ReadLine();
+
+            Player player = new Player(playerNumber, playerNickName, playerLevel);
+
+            Console.WriteLine("Укажите забанен ли игрок или нет (Забанен / Не забанен):");
+            AddInfoAboutPlayerBan(player);
+
+            _players.Add(player.Number, player);
+
+            Console.Clear();
+        }
+
+        public void DeletePlayerByNumber()
+        {
+            Console.Clear();
+
+            Console.WriteLine("Укажите номер игрока которого хотите удалить:");
+            string userInputNumber = Console.ReadLine();
+
+            if (_players.Remove(userInputNumber))
+            {
+                Console.WriteLine($"Игрок под номером {userInputNumber} был удален");
+            }
+            else
+            {
+                Console.WriteLine($"Игрок с номером {userInputNumber} не найден");
+            }
+
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        public void ShowAllPlayers()
+        {
+            Console.Clear();
+
+            string banned = "Забанен";
+            string notBanned = "Не забанен";
+
+            foreach (var player in _players.Values)
+            {
+                Console.WriteLine($"Ник-нейм : {player.NickName} | Номер : {player.Number} | " +
+                $"Уровень : {player.Level} | Состояние аккаунта : {(player.IsBanned ? $"{banned}" : $"{notBanned}")}");
+
+                Console.WriteLine();
+            }
+
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        public void BannPlayer()
+        {
+            Console.Clear();
+
+            Console.WriteLine("Введите номер игрока которого хотите забанить:");
+            string userInputNumber = Console.ReadLine();
+
+            if (TryGetPlayer(userInputNumber, out Player player))
+            {
+                player.Ban();
+                Console.WriteLine($"Игрок под номером {userInputNumber} был забанен");
+            }
+            else
+            {
+                Console.WriteLine("Игрок с данным номером не найден");
+            }
+
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        public void UnbannPlayer()
+        {
+            Console.Clear();
+
+            Console.WriteLine("Введите номер игрока:");
+            string userInputNumber = Console.ReadLine();
+
+            if (TryGetPlayer(userInputNumber, out Player player))
+            {
+                player.Unban();
+                Console.WriteLine($"Игрок под номером {userInputNumber} был разбанен");
+            }
+            else
+            {
+                Console.WriteLine("Игрок с данным номером не найден");
+            }
+
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        private bool TryGetPlayer(string playerNumber, out Player player)
+        {
+            if (_players.TryGetValue(playerNumber, out player))
+            {
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"Игрок с номером {playerNumber} не найден");
+                return false;
+            }
+        }
+
+        private void AddInfoAboutPlayerBan(Player player)
+        {
+            string banned = "Забанен";
+            string notBanned = "Не забанен";
+
+            bool isVerificationDone = false;
+
+            while (isVerificationDone == false)
+            {
+                string userInputBann = Console.ReadLine();
+
+                if (userInputBann == banned)
+                {
+                    player.Ban();
+                    isVerificationDone = true;
+                }
+                else if (userInputBann == notBanned)
+                {
+                    player.Unban();
+                    isVerificationDone = true;
+                }
+                else
+                {
+                    Console.WriteLine("Нет такой команды, попробуйте ещё раз");
+                }
+            }
+        }
+    }
+
+    class Player
+    {
+
+        public Player(string number, string nickName, string level)
+        {
+            Number = number;
+            NickName = nickName;
+            Level = level;
+        }
+
+        public string Number { get; private set; }
+        public string NickName { get; private set; }
+        public string Level { get; private set; }
+        public bool IsBanned { get; private set; }
+
+        public void Ban()
+        {
+            IsBanned = true;
+        }
+
+        public void Unban()
+        {
+            IsBanned = false;
+        }
+    }
+}
