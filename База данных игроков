@@ -75,11 +75,11 @@ namespace уроки
             Console.WriteLine("Укажите ник-нейм игрока:");
             string playerNickName = Console.ReadLine();
 
-            Console.WriteLine("Укажите номер игрока:");
-            string playerNumber = Console.ReadLine();
+            string playerNumber = CreatePlayerNumber();
+            Console.WriteLine($"Игроку присвоен номер: {playerNumber}");
 
             Console.WriteLine("Укажите уровень игрока:");
-            string playerLevel = Console.ReadLine();
+            int playerLevel = Convert.ToInt32(Console.ReadLine());
 
             Player player = new Player(playerNumber, playerNickName, playerLevel);
 
@@ -212,12 +212,18 @@ namespace уроки
                 }
             }
         }
+
+        private string CreatePlayerNumber()
+        {
+            int playerNumber = 1;
+
+            return playerNumber++.ToString();
+        }
     }
 
     class Player
     {
-
-        public Player(string number, string nickName, string level)
+        public Player(string number, string nickName, int level)
         {
             Number = number;
             NickName = nickName;
@@ -226,7 +232,7 @@ namespace уроки
 
         public string Number { get; private set; }
         public string NickName { get; private set; }
-        public string Level { get; private set; }
+        public int Level { get; private set; }
         public bool IsBanned { get; private set; }
 
         public void Ban()
