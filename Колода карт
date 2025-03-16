@@ -1,0 +1,186 @@
+using System;
+using System.Collections.Generic;
+
+namespace Уроки
+{
+    internal class Program
+    {
+        public static void Main()
+        {
+            Deck deck = new Deck();
+            Crupier crupier = new Crupier();
+            Player player = new Player();
+
+            List<Card> cards = deck.GetCards();
+
+            Console.WriteLine("Все карты в колоде ");
+
+            Console.ReadKey();
+            Console.WriteLine();
+
+            deck.ShowCardsInDeck();
+
+            Console.ReadKey();
+            Console.Clear();
+
+            int amountOfCards = player.AskAmountOfCards(cards);
+            crupier.GiveCardsToPlayer(player, cards, amountOfCards);
+
+            Console.ReadKey();
+            Console.WriteLine();
+
+            player.ShowCards();
+
+            Console.ReadKey();
+            Console.Clear();
+
+            Console.WriteLine("Вот оставшиеся карты в колоде:");
+            deck.ShowCardsInDeck();
+        }
+    }
+
+    class Crupier
+    {
+        public void GiveCardsToPlayer(Player player, List<Card> cards, int amountCards)
+        {
+            if (amountCards <= cards.Count)
+            {
+                List<Card> randomCards = GetRandomCardsFromDeck(cards, amountCards);
+                RemoveCardsFromDeck(cards, randomCards);
+                player.ReceiveCards(randomCards);
+            }
+        }
+
+        private void RemoveCardsFromDeck(List<Card> cards, List<Card> randomCards)
+        {
+            foreach (var card in randomCards)
+            {
+                cards.Remove(card);
+            }
+        }
+
+        private List<Card> GetRandomCardsFromDeck(List<Card> cards, int amountCards)
+        {
+            List<Card> randomCards = new List<Card>();
+            Random random = new Random();
+            HashSet<int> selectedCardIndexes = new HashSet<int>();
+
+            while (randomCards.Count < amountCards)
+            {
+                int randomIndex = random.Next(cards.Count);
+
+                if (selectedCardIndexes.Contains(randomIndex) == false)
+                {
+                    selectedCardIndexes.Add(randomIndex);
+                    randomCards.Add(cards[randomIndex]);
+                }
+            }
+
+            return randomCards;
+        }
+    }
+
+    class Player
+    {
+        private List<Card> _playerCards = new List<Card>();
+
+        public int AskAmountOfCards(List<Card> cards)
+        {
+            Console.WriteLine("Введите желаемое количество карт, которые вы хотите получить.:");
+
+            int UserInputAmountOfCards;
+
+            if (int.TryParse(Console.ReadLine(), out UserInputAmountOfCards))
+            {
+                if (UserInputAmountOfCards > cards.Count)
+                {
+                    Console.WriteLine($"Вы ввели слишком большое число, в этой колоде есть только {cards.Count} карт.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Неверный ввод");
+            }
+
+            return UserInputAmountOfCards;
+        }
+
+        public void ShowCards()
+        {
+            Console.WriteLine("Вот ваши карты");
+            foreach (var card in _playerCards)
+            {
+                Console.WriteLine(card);
+            }
+        }
+
+        public void ReceiveCards(List<Card> cards)
+        {
+            _playerCards.AddRange(cards);
+            Console.WriteLine($"у вас {cards.Count} карт: ");
+        }
+    }
+
+    class Deck
+    {
+        public Deck()
+        {
+            CreateDeck();
+        }
+
+        private List<Card> _cards = new List<Card>();
+
+        public void CreateDeck()
+        {
+            foreach (var suit in Card.Suits())
+            {
+                foreach (var rank in Card.Ranks())
+                {
+                    _cards.Add(new Card(suit, rank));
+                }
+            }
+        }
+
+        public List<Card> GetCards()
+        {
+            return _cards;
+        }
+
+        public void ShowCardsInDeck()
+        {
+            foreach (var card in _cards)
+                Console.Write(card + " ~ ");
+            Console.ReadKey();
+        }
+    }
+
+    class Card
+    {
+        private string _suit;
+        private string _rank;
+
+        private static string[] _suits = { "Черви", "Буби", "Крести", "Пики" };
+        private static string[] _ranks = { "6", "7", "8", "9", "10", "Валет", "Дама", "Король", "Туз" };
+
+        public Card(string suit, string rank)
+        {
+            _suit = suit;
+            _rank = rank;
+        }
+
+        public static string[] Suits()
+        {
+            return _suits;
+        }
+
+        public static string[] Ranks()
+        {
+            return _ranks;
+        }
+
+        public override string ToString()
+        {
+            return ($"{_rank} {_suit}");
+        }
+    }
+}
