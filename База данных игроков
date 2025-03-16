@@ -1,11 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace уроки
 {
     internal class Program
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
             Database database = new Database();
 
@@ -66,7 +68,7 @@ namespace уроки
 
     class Database
     {
-        private readonly Dictionary<string, Player> _players = new Dictionary<string, Player>();
+        private readonly Dictionary<int, Player> _players = new Dictionary<int, Player>();
 
         public void AddPlayer()
         {
@@ -75,16 +77,12 @@ namespace уроки
             Console.WriteLine("Укажите ник-нейм игрока:");
             string playerNickName = Console.ReadLine();
 
-            string playerNumber = CreatePlayerNumber();
-            Console.WriteLine($"Игроку присвоен номер: {playerNumber}");
-
             Console.WriteLine("Укажите уровень игрока:");
-            int playerLevel = Convert.ToInt32(Console.ReadLine());
+            int playerLevel = Utils.ReadInt();
 
-            Player player = new Player(playerNumber, playerNickName, playerLevel);
+            Player player = new Player(playerNickName, playerLevel);
 
-            Console.WriteLine("Укажите забанен ли игрок или нет (Забанен / Не забанен):");
-            AddInfoAboutPlayerBan(player);
+            player.Unban();
 
             _players.Add(player.Number, player);
 
@@ -96,7 +94,7 @@ namespace уроки
             Console.Clear();
 
             Console.WriteLine("Укажите номер игрока которого хотите удалить:");
-            string userInputNumber = Console.ReadLine();
+            int userInputNumber = Utils.ReadInt();
 
             if (_players.Remove(userInputNumber))
             {
@@ -135,7 +133,7 @@ namespace уроки
             Console.Clear();
 
             Console.WriteLine("Введите номер игрока которого хотите забанить:");
-            string userInputNumber = Console.ReadLine();
+            int userInputNumber = Utils.ReadInt();
 
             if (TryGetPlayer(userInputNumber, out Player player))
             {
@@ -156,7 +154,7 @@ namespace уроки
             Console.Clear();
 
             Console.WriteLine("Введите номер игрока:");
-            string userInputNumber = Console.ReadLine();
+            int userInputNumber = Utils.ReadInt();
 
             if (TryGetPlayer(userInputNumber, out Player player))
             {
@@ -172,7 +170,7 @@ namespace уроки
             Console.Clear();
         }
 
-        private bool TryGetPlayer(string playerNumber, out Player player)
+        private bool TryGetPlayer(int playerNumber, out Player player)
         {
             if (_players.TryGetValue(playerNumber, out player))
             {
@@ -185,64 +183,46 @@ namespace уроки
             }
         }
 
-        private void AddInfoAboutPlayerBan(Player player)
+        class Utils
         {
-            string banned = "Забанен";
-            string notBanned = "Не забанен";
-
-            bool isVerificationDone = false;
-
-            while (isVerificationDone == false)
+            public static int ReadInt()
             {
-                string userInputBann = Console.ReadLine();
+                int result = 0;
 
-                if (userInputBann == banned)
+                while (int.TryParse(Console.ReadLine(), out result) == false)
                 {
-                    player.Ban();
-                    isVerificationDone = true;
+                    Console.WriteLine($"Не удалось преобразовать в число.");
                 }
-                else if (userInputBann == notBanned)
-                {
-                    player.Unban();
-                    isVerificationDone = true;
-                }
-                else
-                {
-                    Console.WriteLine("Нет такой команды, попробуйте ещё раз");
-                }
+
+                return result;
             }
         }
 
-        private string CreatePlayerNumber()
+        class Player
         {
-            int playerNumber = 1;
+            private static int s_lastNumber;
+            public Player(string nickName, int level)
+            {
+                s_lastNumber++;
+                Number = s_lastNumber;
+                NickName = nickName;
+                Level = level;
+            }
 
-            return playerNumber++.ToString();
-        }
-    }
+            public int Number { get; private set; }
+            public string NickName { get; private set; }
+            public int Level { get; private set; }
+            public bool IsBanned { get; private set; }
 
-    class Player
-    {
-        public Player(string number, string nickName, int level)
-        {
-            Number = number;
-            NickName = nickName;
-            Level = level;
-        }
+            public void Ban()
+            {
+                IsBanned = true;
+            }
 
-        public string Number { get; private set; }
-        public string NickName { get; private set; }
-        public int Level { get; private set; }
-        public bool IsBanned { get; private set; }
-
-        public void Ban()
-        {
-            IsBanned = true;
-        }
-
-        public void Unban()
-        {
-            IsBanned = false;
+            public void Unban()
+            {
+                IsBanned = false;
+            }
         }
     }
 }
