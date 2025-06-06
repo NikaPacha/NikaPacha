@@ -29,19 +29,21 @@ namespace уроки
             List<Card> cards = new List<Card>();
 
             Console.Write("\nКоличество карт запрашиваемых у диллера: ");
-            int cardsCount = Card.Utils.ReadInt();
+            int cardsCount = Utils.ReadInt();
 
             cards.AddRange(TakeCards(cardsCount));
 
-            _player.TakeCard(cards);
+            _player.TakeCards(cards);
         }
 
         private List<Card> TakeCards(int cardsCount)
         {
+            _deck.Shuffle();
+
             List<Card> cards = new List<Card>();
 
-            if (_deck.AcceptQuantityCards < cardsCount)
-                cardsCount = _deck.AcceptQuantityCards;
+            if (_deck.CardsCount < cardsCount)
+                cardsCount = _deck.CardsCount;
 
             for (int i = 0; i < cardsCount; i++)
                 cards.Add(_deck.GiveCard());
@@ -54,7 +56,7 @@ namespace уроки
     {
         private List<Card> _cards = new List<Card>();
     
-        public void TakeCard(List<Card> cards)
+        public void TakeCards(List<Card> cards)
         {
             _cards.AddRange(cards);
 
@@ -64,6 +66,7 @@ namespace уроки
         private void ShowPlayerCards()
         {
             Console.WriteLine("Ваши карты: ");
+
             foreach (Card cards in _cards)
             {
                 Console.WriteLine($"{cards.Suit} - {cards.Ranks}.");
@@ -89,12 +92,11 @@ namespace уроки
                 }
             }
         }
-        public int AcceptQuantityCards => _cards.Count;
+
+        public int CardsCount => _cards.Count;
 
         public Card GiveCard()
-        {
-            Shuffle();
-
+        {       
             int indexFirstCard = 0;
 
             Card card = _cards[indexFirstCard];
@@ -109,15 +111,15 @@ namespace уроки
             {
                 Console.Write($"| {card.Suit} {card.Ranks} |");
             }
-
         }
-        private void Shuffle()
+
+        public void Shuffle()
         {
             int randomNumber;
 
             for (int i = _cards.Count - 1; i >= 0; i--)
             {
-                randomNumber = Card.Utils.GetRandomNumber(i);
+                randomNumber = Utils.GetRandomNumber(i);
 
                 Card firstCard = _cards[randomNumber];
                 Card secondCard = _cards[i];
@@ -140,7 +142,8 @@ namespace уроки
         public string Ranks { get; private set; }
         public string Suit { get; private set; }
 
-        public static class Utils
+    }
+         static class Utils
         {
             static private Random s_random = new Random();
 
@@ -156,6 +159,5 @@ namespace уроки
                 return number;
             }
         }
-    }
 
 } 
