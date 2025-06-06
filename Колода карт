@@ -55,7 +55,7 @@ namespace уроки
     class Player
     {
         private List<Card> _cards = new List<Card>();
-    
+
         public void TakeCards(List<Card> cards)
         {
             _cards.AddRange(cards);
@@ -77,7 +77,7 @@ namespace уроки
     class Deck
     {
         private List<Card> _cards = new List<Card>();
-        
+
 
         public Deck()
         {
@@ -96,7 +96,7 @@ namespace уроки
         public int CardsCount => _cards.Count;
 
         public Card GiveCard()
-        {       
+        {
             int indexFirstCard = 0;
 
             Card card = _cards[indexFirstCard];
@@ -143,21 +143,21 @@ namespace уроки
         public string Suit { get; private set; }
 
     }
-         static class Utils
+    static class Utils
+    {
+        static private Random s_random = new Random();
+
+        public static int GetRandomNumber(int maxValue) => s_random.Next(maxValue);
+
+        public static int ReadInt()
         {
-            static private Random s_random = new Random();
+            int number;
 
-            public static int GetRandomNumber(int maxValue) => s_random.Next(maxValue);
+            while (int.TryParse(Console.ReadLine(), out number) == false)
+                Console.WriteLine("Ошибка! Неверный ввод, требуется целое положительное число.");
 
-            public static int ReadInt()
-            {
-                int number;
-
-                while (int.TryParse(Console.ReadLine(), out number) == false)
-                    Console.WriteLine("Ошибка! Неверный ввод, требуется целое положительное число.");
-
-                return number;
-            }
+            return number;
         }
+    }
 
-} 
+}
