@@ -9,7 +9,7 @@ namespace уроки
         static void Main(string[] args)
         {
             BookShop bookShop = new BookShop();
-            bool exit = false;
+            bool isExit = false;
 
             const string CommandAddBook = "1";
             const string CommandDeleteBook = "2";
@@ -19,7 +19,7 @@ namespace уроки
             const string CommandSearchBookByYearOfIssue = "6";
             const string CommandQuit = "0";
 
-            while (exit == false)
+            while (isExit == false)
             {
                 Console.WriteLine("Меню:");
                 Console.WriteLine($"{CommandAddBook}. Добавить книгу");
@@ -62,7 +62,7 @@ namespace уроки
                         break;
 
                     case CommandQuit:
-                        exit = true;
+                        isExit = true;
                         break;
                 }
             }
@@ -93,16 +93,14 @@ namespace уроки
 
             public void ShowAllBooks()
             {
+                Console.Clear();
+
+                Console.WriteLine("Библиотека:");
+
+                for (int i = 0; i < _books.Count; i++)
                 {
-                    Console.Clear();
-
-                    Console.WriteLine("Библиотека:");
-
-                    for (int i = 0; i < _books.Count; i++)
-                    {
-                        Console.Write(i + 1 + ") ");
-                        _books[i].ShowInfo();
-                    }
+                    Console.Write(i + 1 + ") ");
+                    _books[i].ShowInfo();
                 }
             }
 
@@ -117,7 +115,7 @@ namespace уроки
                 string author = Console.ReadLine();
 
                 Console.WriteLine("Укажите дату выхода книги: ");
-                int yearOfIssue = Utils.ReadInt();
+                int yearOfIssue = ReadInt();
 
                 _books.Add(new Book(name, author, yearOfIssue));
             }
@@ -129,7 +127,18 @@ namespace уроки
                 Console.Clear();
 
                 Console.WriteLine("Укажите номер книги: ");
-                bookIndex = Utils.ReadInt() - 1;
+                bookIndex = ReadInt() - 1;
+
+                if (bookIndex > 0 && bookIndex <= _books.Count)
+                {
+                    _books.RemoveAt(bookIndex - 1);
+                    Console.WriteLine("Книга удалена.");
+                }
+                else
+                {
+                    Console.WriteLine("В хранилище нет книги с таким номером.");
+                    return;
+                }
 
                 _books.RemoveAt(bookIndex);
             }
@@ -141,7 +150,7 @@ namespace уроки
                 Console.WriteLine("Введите название книги. ");
                 string userInput = Console.ReadLine();
 
-                var FiltredBooks = from Book book in _books where book.Name == userInput select book;
+                var FiltredBooks = from Book book in _books where book.Name.ToLower() == userInput.ToLower() select book;
 
                 foreach (var book in FiltredBooks)
                 {
@@ -156,7 +165,7 @@ namespace уроки
                 Console.WriteLine("Введите имя автора. ");
                 string userInput = Console.ReadLine();
 
-                var FiltredBooks = from Book book in _books where book.Author == userInput select book;
+                var FiltredBooks = from Book book in _books where book.Author.ToLower() == userInput.ToLower() select book;
 
                 foreach (var book in FiltredBooks)
                 {
@@ -199,21 +208,14 @@ namespace уроки
             }
         }
 
-        public static class Utils
+        public static int ReadInt()
         {
-            static private Random s_random = new Random();
+            int number;
 
-            public static int GetRandomNumber(int maxValue) => s_random.Next(maxValue);
+            while (int.TryParse(Console.ReadLine(), out number) == false)
+                Console.WriteLine("Ошибка! Неверный ввод, требуется целое положительное число.");
 
-            public static int ReadInt()
-            {
-                int number;
-
-                while (int.TryParse(Console.ReadLine(), out number) == false)
-                    Console.WriteLine("Ошибка! Неверный ввод, требуется целое положительное число.");
-
-                return number;
-            }
+            return number;
         }
     }
 }
