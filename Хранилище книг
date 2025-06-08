@@ -139,8 +139,8 @@ namespace уроки
                 Console.Clear();
 
                 Console.WriteLine("Введите название книги. ");
-
                 string userInput = Console.ReadLine();
+
                 var FiltredBooks = from Book book in _books where book.Name == userInput select book;
 
                 foreach (var book in FiltredBooks)
@@ -154,8 +154,8 @@ namespace уроки
                 Console.Clear();
 
                 Console.WriteLine("Введите имя автора. ");
-
                 string userInput = Console.ReadLine();
+
                 var FiltredBooks = from Book book in _books where book.Author == userInput select book;
 
                 foreach (var book in FiltredBooks)
@@ -169,8 +169,8 @@ namespace уроки
                 Console.Clear();
 
                 Console.WriteLine("Введите год выпуска книги. ");
-
                 int userInput = Convert.ToInt32(Console.ReadLine());
+
                 var FiltredBooks = from Book book in _books where book.YearOfIssue == userInput select book;
 
                 foreach (var book in FiltredBooks)
