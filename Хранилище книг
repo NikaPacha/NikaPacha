@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace уроки
 {
+
     internal class Program
     {
         static void Main(string[] args)
@@ -50,15 +51,15 @@ namespace уроки
                         break;
 
                     case CommandSearchBookByName:
-                        bookShop.SearchBookByName();
+                        bookShop.SearchBooksByName();
                         break;
 
                     case CommandSearchBookByAuthor:
-                        bookShop.SearchBookByAuthor();
+                        bookShop.SearchBooksByAuthor();
                         break;
 
                     case CommandSearchBookByYearOfIssue:
-                        bookShop.SearchBookByYearOfIssue();
+                        bookShop.SearchBooksByYearOfIssue();
                         break;
 
                     case CommandQuit:
@@ -67,147 +68,143 @@ namespace уроки
                 }
             }
         }
+    }
 
-        class BookShop
+    class BookShop
+    {
+        private List<Book> _books = new List<Book>();
+
+        public BookShop()
         {
-            private List<Book> _books = new List<Book>();
+            _books.Add(new Book("Последнее желание", "Анджей Сапковский", "1986"));
+            _books.Add(new Book("Меч предназначения", "Анджей Сапковский", "1992"));
+            _books.Add(new Book("Кровь эльфов", "Анджей Сапковский", "1994"));
+            _books.Add(new Book("Час презрения", "Анджей Сапковский", "1995"));
+            _books.Add(new Book("Крещение огнём", "Анджей Сапковский", "1996"));
+            _books.Add(new Book("Башня Ласточки", "Анджей Сапковский", "1997"));
+            _books.Add(new Book("Владычица Озера", "Анджей Сапковский", "1997"));
+            _books.Add(new Book("Сезон гроз", "Анджей Сапковский", "2013"));
+            _books.Add(new Book("Последняя Империя", "Брэндон Сандерсон", "2006"));
+            _books.Add(new Book("Колодец Вознесения", "Брэндон Сандерсон", "2007"));
+            _books.Add(new Book("Герой веков", "Брэндон Сандерсон", "2008"));
+            _books.Add(new Book("Сплав Закона", "Брэндон Сандерсон", "2011"));
+            _books.Add(new Book("Тени Самого Себя", "Брэндон Сандерсон", "2015"));
+            _books.Add(new Book("Скорбные мелодии", "Брэндон Сандерсон", "2016"));
+            _books.Add(new Book("Потерянный металл", "Брэндон Сандерсон", "2022"));
+        }
 
-            public BookShop()
+        public void ShowAllBooks()
+        {
+            Console.Clear();
+
+            Console.WriteLine("Библиотека:");
+
+            for (int i = 0; i < _books.Count; i++)
             {
-                _books.Add(new Book("Последнее желание", "Анджей Сапковский", 1986));
-                _books.Add(new Book("Меч предназначения", "Анджей Сапковский", 1992));
-                _books.Add(new Book("Кровь эльфов", "Анджей Сапковский", 1994));
-                _books.Add(new Book("Час презрения", "Анджей Сапковский", 1995));
-                _books.Add(new Book("Крещение огнём", "Анджей Сапковский", 1996));
-                _books.Add(new Book("Башня Ласточки", "Анджей Сапковский", 1997));
-                _books.Add(new Book("Владычица Озера", "Анджей Сапковский", 1998));
-                _books.Add(new Book("Сезон гроз", "Анджей Сапковский", 2013));
-                _books.Add(new Book("Последняя Империя", "Брэндон Сандерсон", 2006));
-                _books.Add(new Book("Колодец Вознесения", "Брэндон Сандерсон", 2007));
-                _books.Add(new Book("Герой веков", "Брэндон Сандерсон", 2008));
-                _books.Add(new Book("Сплав Закона", "Брэндон Сандерсон", 2011));
-                _books.Add(new Book("Тени Самого Себя", "Брэндон Сандерсон", 2015));
-                _books.Add(new Book("Скорбные мелодии", "Брэндон Сандерсон", 2016));
-                _books.Add(new Book("Потерянный металл", "Брэндон Сандерсон", 2022));
-            }
-
-            public void ShowAllBooks()
-            {
-                Console.Clear();
-
-                Console.WriteLine("Библиотека:");
-
-                for (int i = 0; i < _books.Count; i++)
-                {
-                    Console.Write(i + 1 + ") ");
-                    _books[i].ShowInfo();
-                }
-            }
-
-            public void AddBook()
-            {
-                Console.Clear();
-
-                Console.WriteLine("Укажите название книги: ");
-                string name = Console.ReadLine();
-
-                Console.WriteLine("Укажите автора книги: ");
-                string author = Console.ReadLine();
-
-                Console.WriteLine("Укажите дату выхода книги: ");
-                int yearOfIssue = ReadInt();
-
-                _books.Add(new Book(name, author, yearOfIssue));
-            }
-
-            public void DeleteBook()
-            {
-                int bookIndex;
-
-                Console.Clear();
-
-                Console.WriteLine("Укажите номер книги: ");
-                bookIndex = ReadInt() - 1;
-
-                if (bookIndex > 0 && bookIndex <= _books.Count)
-                {
-                    _books.RemoveAt(bookIndex - 1);
-                    Console.WriteLine("Книга удалена.");
-                }
-                else
-                {
-                    Console.WriteLine("В хранилище нет книги с таким номером.");
-                    return;
-                }
-
-                _books.RemoveAt(bookIndex);
-            }
-
-            public void SearchBookByName()
-            {
-                Console.Clear();
-
-                Console.WriteLine("Введите название книги. ");
-                string userInput = Console.ReadLine();
-
-                var FiltredBooks = from Book book in _books where book.Name.ToLower() == userInput.ToLower() select book;
-
-                foreach (var book in FiltredBooks)
-                {
-                    book.ShowInfo();
-                }
-            }
-
-            public void SearchBookByAuthor()
-            {
-                Console.Clear();
-
-                Console.WriteLine("Введите имя автора. ");
-                string userInput = Console.ReadLine();
-
-                var FiltredBooks = from Book book in _books where book.Author.ToLower() == userInput.ToLower() select book;
-
-                foreach (var book in FiltredBooks)
-                {
-                    book.ShowInfo();
-                }
-            }
-
-            public void SearchBookByYearOfIssue()
-            {
-                Console.Clear();
-
-                Console.WriteLine("Введите год выпуска книги. ");
-                int userInput = Convert.ToInt32(Console.ReadLine());
-
-                var FiltredBooks = from Book book in _books where book.YearOfIssue == userInput select book;
-
-                foreach (var book in FiltredBooks)
-                {
-                    book.ShowInfo();
-                }
+                Console.Write(i + 1 + ") ");
+                _books[i].ShowInfo();
             }
         }
 
-        class Book
+        public void AddBook()
         {
-            public Book(string name, string author, int yearOfIssue)
+            Console.Clear();
+
+            Console.WriteLine("Укажите название книги: ");
+            string name = Console.ReadLine();
+
+            Console.WriteLine("Укажите автора книги: ");
+            string author = Console.ReadLine();
+
+            Console.WriteLine("Укажите дату выхода книги: ");
+            string yearOfIssue = Console.ReadLine();
+
+            _books.Add(new Book(name, author, yearOfIssue));
+        }
+
+        public void DeleteBook()
+        {
+            int bookIndex;
+
+            Console.Clear();
+
+            Console.WriteLine("Укажите номер книги: ");
+            bookIndex = Utils.ReadInt() - 1;
+
+            if (bookIndex > 0 && bookIndex <= _books.Count)
             {
-                Name = name;
-                Author = author;
-                YearOfIssue = yearOfIssue;
+                _books.RemoveAt(bookIndex - 1);
+                Console.WriteLine("Книга удалена.");
             }
-
-            public string Name { get; private set; }
-            public string Author { get; private set; }
-            public int YearOfIssue { get; private set; }
-
-            public void ShowInfo()
+            else
             {
-                Console.WriteLine($"Книга: {Name}. Автор: {Author}, {YearOfIssue} год.");
+                Console.WriteLine("В хранилище нет книги с таким номером.");
+                return;
             }
         }
 
+        public void SearchBooksByName()
+        {
+            Console.Clear();
+
+            Console.WriteLine("Введите название книги. ");
+            string userInput = Console.ReadLine();
+
+            var filtredBooks = from Book book in _books where book.Name.ToLower() == userInput.ToLower() select book;
+
+            foreach (var book in filtredBooks)
+            {
+                book.ShowInfo();
+            }
+        }
+
+        public void SearchBooksByAuthor()
+        {
+            Console.Clear();
+
+            Console.WriteLine("Введите имя автора. ");
+            string userInput = Console.ReadLine();
+
+            var filtredBooks = from Book book in _books where book.Author.ToLower() == userInput.ToLower() select book;
+
+            foreach (var book in filtredBooks)
+            {
+                book.ShowInfo();
+            }
+        }
+
+        public void SearchBooksByYearOfIssue()
+        {
+            Console.Clear();
+
+            Console.WriteLine("Введите год выпуска книги. ");
+            string userInput = Console.ReadLine();
+
+            var filtredBooks = from Book book in _books where book.YearOfIssue == userInput select book;
+        }
+    }
+
+    class Book
+    {
+        public Book(string name, string author, string yearOfIssue)
+        {
+            Name = name;
+            Author = author;
+            YearOfIssue = yearOfIssue;
+        }
+
+        public string Name { get; private set; }
+        public string Author { get; private set; }
+        public string YearOfIssue { get; private set; }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Книга: {Name}. Автор: {Author}, {YearOfIssue} год.");
+        }
+    }
+
+    public static class Utils
+    {
         public static int ReadInt()
         {
             int number;
