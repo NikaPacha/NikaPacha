@@ -2,15 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace уроки
+namespace homework
 {
-
     internal class Program
     {
         static void Main(string[] args)
         {
             BookShop bookShop = new BookShop();
-            bool isExit = false;
 
             const string CommandAddBook = "1";
             const string CommandDeleteBook = "2";
@@ -20,7 +18,9 @@ namespace уроки
             const string CommandSearchBookByYearOfIssue = "6";
             const string CommandQuit = "0";
 
-            while (isExit == false)
+            bool isRun = true;
+
+            while (isRun == true)
             {
                 Console.WriteLine("Меню:");
                 Console.WriteLine($"{CommandAddBook}. Добавить книгу");
@@ -63,7 +63,7 @@ namespace уроки
                         break;
 
                     case CommandQuit:
-                        isExit = true;
+                        isRun = false;
                         break;
                 }
             }
@@ -76,21 +76,21 @@ namespace уроки
 
         public BookShop()
         {
-            _books.Add(new Book("Последнее желание", "Анджей Сапковский", "1986"));
-            _books.Add(new Book("Меч предназначения", "Анджей Сапковский", "1992"));
-            _books.Add(new Book("Кровь эльфов", "Анджей Сапковский", "1994"));
-            _books.Add(new Book("Час презрения", "Анджей Сапковский", "1995"));
-            _books.Add(new Book("Крещение огнём", "Анджей Сапковский", "1996"));
-            _books.Add(new Book("Башня Ласточки", "Анджей Сапковский", "1997"));
-            _books.Add(new Book("Владычица Озера", "Анджей Сапковский", "1997"));
-            _books.Add(new Book("Сезон гроз", "Анджей Сапковский", "2013"));
-            _books.Add(new Book("Последняя Империя", "Брэндон Сандерсон", "2006"));
-            _books.Add(new Book("Колодец Вознесения", "Брэндон Сандерсон", "2007"));
-            _books.Add(new Book("Герой веков", "Брэндон Сандерсон", "2008"));
-            _books.Add(new Book("Сплав Закона", "Брэндон Сандерсон", "2011"));
-            _books.Add(new Book("Тени Самого Себя", "Брэндон Сандерсон", "2015"));
-            _books.Add(new Book("Скорбные мелодии", "Брэндон Сандерсон", "2016"));
-            _books.Add(new Book("Потерянный металл", "Брэндон Сандерсон", "2022"));
+            _books.Add(new Book("Последнее желание", "Анджей Сапковский", 1986));
+            _books.Add(new Book("Меч предназначения", "Анджей Сапковский", 1992));
+            _books.Add(new Book("Кровь эльфов", "Анджей Сапковский", 1994));
+            _books.Add(new Book("Час презрения", "Анджей Сапковский", 1995));
+            _books.Add(new Book("Крещение огнём", "Анджей Сапковский", 1996));
+            _books.Add(new Book("Башня Ласточки", "Анджей Сапковский", 1997));
+            _books.Add(new Book("Владычица Озера", "Анджей Сапковский", 1997));
+            _books.Add(new Book("Сезон гроз", "Анджей Сапковский", 2013));
+            _books.Add(new Book("Последняя Империя", "Брэндон Сандерсон", 2006));
+            _books.Add(new Book("Колодец Вознесения", "Брэндон Сандерсон", 2007));
+            _books.Add(new Book("Герой веков", "Брэндон Сандерсон", 2008));
+            _books.Add(new Book("Сплав Закона", "Брэндон Сандерсон", 2011));
+            _books.Add(new Book("Тени Самого Себя", "Брэндон Сандерсон", 2015));
+            _books.Add(new Book("Скорбные мелодии", "Брэндон Сандерсон", 2016));
+            _books.Add(new Book("Потерянный металл", "Брэндон Сандерсон", 2022));
         }
 
         public void ShowAllBooks()
@@ -117,7 +117,7 @@ namespace уроки
             string author = Console.ReadLine();
 
             Console.WriteLine("Укажите дату выхода книги: ");
-            string yearOfIssue = Console.ReadLine();
+            int yearOfIssue = Utils.ReadInt();
 
             _books.Add(new Book(name, author, yearOfIssue));
         }
@@ -178,15 +178,20 @@ namespace уроки
             Console.Clear();
 
             Console.WriteLine("Введите год выпуска книги. ");
-            string userInput = Console.ReadLine();
+            int userInput = Utils.ReadInt();
 
             var filtredBooks = from Book book in _books where book.YearOfIssue == userInput select book;
+
+            foreach (var book in filtredBooks)
+            {
+                book.ShowInfo();
+            }
         }
     }
 
     class Book
     {
-        public Book(string name, string author, string yearOfIssue)
+        public Book(string name, string author, int yearOfIssue)
         {
             Name = name;
             Author = author;
@@ -195,7 +200,7 @@ namespace уроки
 
         public string Name { get; private set; }
         public string Author { get; private set; }
-        public string YearOfIssue { get; private set; }
+        public int YearOfIssue { get; private set; }
 
         public void ShowInfo()
         {
