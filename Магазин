@@ -1,0 +1,269 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace homework
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Market market = new Market();
+            market.Work();
+        }
+    }
+
+    class Market
+    {
+        private List<Product> _products = new List<Product>();
+        private Seller _seller;
+        private Visitor _visitor;
+
+        public void Work()
+        {
+            InitializeProducts();
+            _seller = new Seller(new List<Product>(), 0);
+            _visitor = new Visitor(new List<Product>(), 300);
+
+            const string CommandAddProductToCart = "1";
+            const string CommandRemoveProductFromCart = "2";
+            const string CommandPay = "3";
+            const string CommandQuit = "0";
+
+            bool isRun = true;
+
+            while (isRun == true)
+            {
+                ShowAllProduct();
+                _seller.ShowWallet();
+                _visitor.ShowWallet();
+                _visitor.ShowCart();
+
+                Console.WriteLine("Меню:");
+                Console.WriteLine($"{CommandAddProductToCart}. Добавить товар в корзину");
+                Console.WriteLine($"{CommandRemoveProductFromCart}. Убрать продукт из корзины");
+                Console.WriteLine($"{CommandPay}. Оплатить корзину");
+                Console.WriteLine($"{CommandQuit}. Выйти");
+                Console.Write("Выберите действие: ");
+
+                string input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case CommandAddProductToCart:
+                        AddProductToCart();
+                        break;
+
+                    case CommandRemoveProductFromCart:
+                        RemoveProductFromCart();
+                        break;
+
+                    case CommandPay:
+                        _visitor.Pay(_visitor, _seller);
+                        break;
+
+                    case CommandQuit:
+                        isRun = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Неверный выбор");
+                        break;
+                }
+            }
+        }
+
+        private void InitializeProducts()
+        {
+            _products.Add(new Product("Хлеб", 20));
+            _products.Add(new Product("Молоко", 150));
+            _products.Add(new Product("Яйца", 60));
+            _products.Add(new Product("Курица", 260));
+            _products.Add(new Product("Сыр", 120));
+            _products.Add(new Product("Помидоры", 30));
+            _products.Add(new Product("Огурцы", 16));
+        }
+
+        public void ShowAllProduct()
+        {
+            Console.Clear();
+
+            {
+                Console.WriteLine("Товарный ряд:");
+
+                for (int i = 0; i < _products.Count; i++)
+                {
+                    _products[i].ShowInfo();
+                }
+            }
+        }
+        public Product GetProduct(int productIndex)
+        {
+            return _products[productIndex];
+        }
+
+        private void AddProductToCart()
+        {
+
+            Console.WriteLine("\nВведите название товара для добавления в корзину.");
+
+            string userInput = Console.ReadLine();
+            var product = _products.FirstOrDefault(p => p.Name.ToLower() == userInput.ToLower());
+
+            if (product != null)
+            {
+                _visitor.AddProduct(product, product.Price);
+            }
+            else
+            {
+                Console.WriteLine("Товар не найден");
+            }
+        }
+        private void RemoveProductFromCart()
+        {
+            Console.WriteLine("\nВведите название товара для удаления из корзины:");
+            string userInput = Console.ReadLine();
+            var product = _visitor.Products.FirstOrDefault(p => p.Name.ToLower() == userInput.ToLower());
+
+            if (product != null)
+            {
+                _visitor.RemoveProduct(product, product.Price);
+            }
+            else
+            {
+                Console.WriteLine("Товар не найден в корзине");
+            }
+        }
+    }
+
+    class Npc
+    {
+        private List<Product> _products;
+        public int Wallet { get; protected set; }
+
+        public Npc(List<Product> products, int wallet)
+        {
+            _products = products;
+            Wallet = wallet;
+        }
+
+        public List<Product> Products => _products;
+
+        public virtual void ShowWallet()
+        {
+            Console.WriteLine(Wallet);
+        }
+
+        public bool ContainProduct(int productIndex)
+        {
+            return productIndex < Products.Count;
+        }
+    }
+
+    class Seller : Npc
+    {
+        public Seller(List<Product> products, int wallet) : base(products, wallet) { }
+
+        public void SellProduct(int productPrice)
+        {
+            Wallet += productPrice;
+        }
+        public override void ShowWallet()
+        {
+            Console.WriteLine($"В кассе {Wallet} руб.");
+        }
+    }
+
+    class Visitor : Npc
+    {
+        public Visitor(List<Product> products, int wallet) : base(products, wallet) { }
+
+        private int _cartPrice;
+        public int CartPrice
+        {
+            get { return _cartPrice; }
+            private set { _cartPrice = value; }
+        }
+
+        public void AddProduct(Product product, int productPrice)
+        {
+            Products.Add(product);
+            CartPrice += product.Price;
+        }
+
+        public void RemoveProduct(Product product, int productPrice)
+        {
+            if (Products != null && Products.Count > 0)
+            {
+                Products.Remove(product);
+                CartPrice -= product.Price;
+            }
+        }
+
+        public void ShowCart()
+        {
+            Console.WriteLine("------------------------------------------------------------------------------");
+            Console.WriteLine("Корзина: ");
+
+            for (int i = 0; i < Products.Count; ++i)
+            {
+                Products[i].ShowInfo();
+            }
+
+            Console.WriteLine($" К оплате: {CartPrice} руб.");
+            Console.WriteLine("------------------------------------------------------------------------------");
+        }
+
+        public void Pay(Visitor visitor, Seller seller)
+        {
+            if (IsEnoughMoney(CartPrice))
+            {
+                BuyProducts(CartPrice);
+                seller.SellProduct(CartPrice);
+                ClearCart();
+            }
+            else
+            {
+                Console.WriteLine("Недостаточно денег.");
+            }
+
+            Console.ReadKey();
+        }
+        private void ClearCart()
+        {
+            Products.Clear();
+            CartPrice = 0;
+        }
+        public override void ShowWallet()
+        {
+            Console.WriteLine($"\n\nУ вас {Wallet} руб.");
+        }
+
+        public bool IsEnoughMoney(int price)
+        {
+            return Wallet >= price;
+        }
+
+        public void BuyProducts(int productPrice)
+        {
+            Wallet -= productPrice;
+        }
+    }
+
+    class Product
+    {
+        public string Name { get; private set; }
+        public int Price { get; private set; }
+
+        public Product(string name, int price)
+        {
+            Name = name;
+            Price = price;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($" {Name}. ({Price} руб.)");
+        }
+    }
+}
