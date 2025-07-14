@@ -45,9 +45,9 @@ namespace homework
 
             while (isRun == true)
             {
+                Console.Clear();
                 _seller.ShowAllProducts();
                 _seller.ShowWallet();
-                _visitor.ShowWallet();
                 _visitor.ShowCart();
 
                 Console.WriteLine("Меню:");
@@ -138,101 +138,112 @@ namespace homework
         }
     }
 
-    class Npc
+    abstract class Nps
     {
-        public List<Product> _products;
+        private List<Product> _products;
+        private int _wallet;
 
-        public Npc(List<Product> products, int wallet)
+        protected Nps(List<Product> products, int wallet)
         {
             _products = products;
-            Wallet = wallet;
+            _wallet = wallet;
         }
 
-        public int Wallet { get; protected set; }
-        public List<Product> Products => _products;
-    }
-    class Seller : Npc
-    {
-        public Seller(List<Product> products, int wallet) : base(products, wallet) { }
-
-        public void ShowAllProducts()
+        protected List<Product> Products
         {
-            Console.WriteLine("Товарный ряд:");
-            foreach (var product in _products)
-            {
-                product.ShowInfo();
-            }
+            get => _products;
+            set => _products = value;
         }
 
-        public Product? GetProductByName(string name)
+        protected int Wallet
+        {
+            get => _wallet;
+            set => _wallet = value;
+        }
+
+        public Product GetProductByName(string name)
         {
             return _products.FirstOrDefault(product => product.Name.ToLower() == name.ToLower());
         }
 
-        public void TakeMoney(int productPrice)
-        {
-            Wallet += productPrice;
-        }
-
-        public void ShowWallet()
-        {
-            Console.WriteLine($"В кассе {Wallet} руб.");
-        }
-    }
-
-    class Visitor : Npc
-    {
-        private List<Product> _cart = new List<Product>();
-
-        public Visitor(int wallet) : base(new List<Product>(), wallet) { }
-
         public void AddProduct(Product product)
         {
-            _cart.Add(product);
+            _products.Add(product);
         }
 
         public void RemoveProduct(Product product)
         {
-            _cart.Remove(product);
+            _products.Remove(product);
         }
 
-        public Product? GetProductByName(string name)
+        public void ShowWallet()
         {
-            return _cart.FirstOrDefault(product => product.Name.ToLower() == name.ToLower());
+            Console.WriteLine($"\nБаланс: {_wallet} руб.");
+        }
+    }
+
+    class Seller : Nps
+    {
+        public Seller(List<Product> products, int wallet) : base(products, wallet) { }
+
+        public void TakeMoney(int amount)
+        {
+            Wallet += amount;
+        }
+        public void ShowAllProducts()
+        {
+            Console.WriteLine("Товарный ряд:");
+            foreach (var product in Products)
+            {
+                product.ShowInfo();
+            }
+        }
+    }
+
+    class Visitor : Nps
+    {
+        public Visitor(int wallet) : base(new List<Product>(), wallet) { }
+
+        public void AddToCart(Product product)
+        {
+            Products.Add(product);
+        }
+
+        public void RemoveFromCart(Product product)
+        {
+            Products.Remove(product);
         }
 
         public void ShowCart()
         {
-            Console.WriteLine("------------------------------------------------------------------------------");
+            Console.WriteLine("\n\n------------------------------------------------------------------------------");
             Console.WriteLine("Корзина: ");
 
-            foreach (var product in _cart)
+            for (int i = 0; i < Products.Count; ++i)
             {
-                product.ShowInfo();
+                Products[i].ShowInfo();
             }
 
-            Console.WriteLine($" К оплате: {CalculateTotalPrice} руб.");
+            ShowWallet();
+            Console.WriteLine($" К оплате: {CalculateTotalPrice()} руб.");
             Console.WriteLine("------------------------------------------------------------------------------");
         }
-        
+
         public int CalculateTotalPrice()
         {
             int total = 0;
-            foreach (Product product in _cart)
+
+            foreach (Product product in Products)
             {
                 total += product.Price;
             }
+
             return total;
         }
 
         public void ClearCart()
         {
-            _cart.Clear();
-        }
-
-        public void ShowWallet()
-        {
-            Console.WriteLine($"\n\nУ вас {Wallet} руб.");
+            Products.Clear();
         }
 
         public bool IsEnoughMoney(int price)
@@ -240,22 +251,22 @@ namespace homework
             return Wallet >= price;
         }
 
-        public void GiveMoney(int productPrice)
+        public void GiveMoney(int amount)
         {
-            Wallet -= productPrice;
+            Wallet -= amount;
         }
     }
 
     class Product
     {
-        public string Name { get; private set; }
-        public int Price { get; private set; }
-
         public Product(string name, int price)
         {
             Name = name;
             Price = price;
         }
+
+        public string Name { get; private set; }
+        public int Price { get; private set; }
 
         public void ShowInfo()
         {
