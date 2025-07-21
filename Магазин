@@ -1,259 +1,189 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace homework
 {
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
-            Market market = new Market();
-            market.Work();
-        }
-    }
+            const string CommandShowSeller = "1";
+            const string CommandShowBuyer = "2";
+            const string CommandBuy = "3";
+            const string CommandExit = "4";
 
-    class Market
-    {
-        private Seller _seller;
-        private Visitor _visitor;
-
-        public Market()
-        {
-            _seller = new Seller(new List<Product>
-         {
-            new Product("Хлеб", 20),
-            new Product("Молоко", 150),
-            new Product("Яйца", 60),
-            new Product("Курица", 260),
-            new Product("Сыр", 120),
-            new Product("Помидоры", 30),
-            new Product("Огурцы", 16)
-         }, 0);
-
-            _visitor = new Visitor(300);
-        }
-
-        public void Work()
-        {
-            const string CommandAddProductToCart = "1";
-            const string CommandRemoveProductFromCart = "2";
-            const string CommandPay = "3";
-            const string CommandQuit = "0";
-
-            bool isRun = true;
-
-            while (isRun == true)
+            Shop shop = new Shop();
+            bool isWork = true;
+            
+            while (isWork)
             {
                 Console.Clear();
-                _seller.ShowAllProducts();
-                _seller.ShowWallet();
-                _visitor.ShowCart();
+                shop.ShowSellerInfo();
+                shop.ShowBuyerInfo();
+                Console.WriteLine($"Menu: \n{CommandShowSeller} - Show seller's property \n{CommandShowBuyer} - Show buyer's property" +
+                    $"\n{CommandBuy} - Buy \n{CommandExit} - Exit");
 
-                Console.WriteLine("Меню:");
-                Console.WriteLine($"{CommandAddProductToCart}. Добавить товар в корзину");
-                Console.WriteLine($"{CommandRemoveProductFromCart}. Убрать продукт из корзины");
-                Console.WriteLine($"{CommandPay}. Оплатить корзину");
-                Console.WriteLine($"{CommandQuit}. Выйти");
-                Console.Write("Выберите действие: ");
-
-                string input = Console.ReadLine();
-
-                switch (input)
+                switch (Console.ReadLine())
                 {
-                    case CommandAddProductToCart:
-                        AddProductToCart();
+                    case CommandShowSeller:
+                        shop.ShowSellerInfo();
                         break;
 
-                    case CommandRemoveProductFromCart:
-                        RemoveProductFromCart();
+                    case CommandShowBuyer:
+                        shop.ShowBuyerInfo();
                         break;
 
-                    case CommandPay:
-                        Pay();
+                    case CommandBuy:
+                        shop.TradeThings();
                         break;
 
-                    case CommandQuit:
-                        isRun = false;
+                    case CommandExit:
+                        isWork = false;
                         break;
 
                     default:
-                        Console.WriteLine("Неверный выбор");
+                        Console.WriteLine("Choose command!");
                         break;
                 }
-            }
-        }
 
-        private void AddProductToCart()
-        {
-            Console.WriteLine("\nВведите название товара для добавления в корзину.");
-            string userInput = Console.ReadLine();
-
-            Product selectedProduct = _seller.GetProductByName(userInput);
-            if (selectedProduct != null)
-            {
-                _visitor.AddProduct(selectedProduct);
-            }
-            else
-            {
-                Console.WriteLine("Товар не найден");
-            }
-        }
-
-        private void RemoveProductFromCart()
-        {
-            Console.WriteLine("\nВведите название товара для удаления из корзины:");
-            string userInput = Console.ReadLine();
-
-            Product selectedProduct = _visitor.GetProductByName(userInput);
-            if (selectedProduct != null)
-            {
-                _visitor.RemoveProduct(selectedProduct);
-            }
-            else
-            {
-                Console.WriteLine("Товар не найден в корзине");
-            }
-        }
-
-        private void Pay()
-        {
-            int cartPrice = _visitor.CalculateTotalPrice();
-
-            if (_visitor.IsEnoughMoney(cartPrice))
-            {
-                _visitor.GiveMoney(cartPrice);
-                _seller.TakeMoney(cartPrice);
-                _visitor.ClearCart();
-
-                Console.WriteLine("\nОплата прошла успешно!");
-            }
-            else
-            {
-                Console.WriteLine("\nНедостаточно средств для оплаты!");
-            }
-
-            Console.WriteLine("\nНажмите любую клавишу для продолжения...");
-            Console.ReadKey();
-        }
-    }
-
-    abstract class Nps
-    {
-        private List<Product> _products;
-        private int _wallet;
-
-        protected Nps(List<Product> products, int wallet)
-        {
-            _products = products;
-            _wallet = wallet;
-        }
-
-        protected List<Product> Products
-        {
-            get => _products;
-            set => _products = value;
-        }
-
-        protected int Wallet
-        {
-            get => _wallet;
-            set => _wallet = value;
-        }
-
-        public Product GetProductByName(string name)
-        {
-            return _products.FirstOrDefault(product => product.Name.ToLower() == name.ToLower());
-        }
-
-        public void AddProduct(Product product)
-        {
-            _products.Add(product);
-        }
-
-        public void RemoveProduct(Product product)
-        {
-            _products.Remove(product);
-        }
-
-        public void ShowWallet()
-        {
-            Console.WriteLine($"\nБаланс: {_wallet} руб.");
-        }
-    }
-
-    class Seller : Nps
-    {
-        public Seller(List<Product> products, int wallet) : base(products, wallet) { }
-
-        public void TakeMoney(int amount)
-        {
-            Wallet += amount;
-        }
-        public void ShowAllProducts()
-        {
-            Console.WriteLine("Товарный ряд:");
-            foreach (var product in Products)
-            {
-                product.ShowInfo();
+                Console.ReadKey();
             }
         }
     }
 
-    class Visitor : Nps
+    class Shop
     {
-        public Visitor(int wallet) : base(new List<Product>(), wallet) { }
+        private Buyer _buyer = new Buyer();
+        private Seller _seller = new Seller();
 
-        public void AddToCart(Product product)
+        public void ShowSellerInfo()
         {
-            Products.Add(product);
+            _seller.PrintInfo();
         }
 
-        public void RemoveFromCart(Product product)
+        public void ShowBuyerInfo()
         {
-            Products.Remove(product);
+            _buyer.PrintInfo();
         }
 
-        public void ShowCart()
+        public void TradeThings()
         {
-            Console.WriteLine("\n\n------------------------------------------------------------------------------");
-            Console.WriteLine("Корзина: ");
-
-            for (int i = 0; i < Products.Count; ++i)
+            if  (_seller.TryGetProduct(out Product product))
             {
-                Products[i].ShowInfo();
+                if (_buyer.CanBuy(product.Price))
+                {
+                    _buyer.Buy(product);
+                    _seller.Sell(product);
+                }
+                else
+                {
+                    Console.WriteLine("Not enough money");
+                }
+            }
+            else
+            {
+                Console.WriteLine("NO products! ");
+            }
+        }
+    }
+
+    class Character
+    {
+        protected List<Product> Products = new List<Product>();
+        public int Money { get; protected set; }
+        protected string Name;
+
+        public void PrintInfo()
+        {
+            Console.WriteLine($"{Name}'s property || money: {Money}");
+
+            for (int i = 0; i < Products.Count; i++)
+            {
+                Product product = Products[i];
+
+                Console.WriteLine($"{i+1} - PRODUCT: {product.Name} / PRICE: {product.Price} ");
+            }
+        }
+    }
+
+    class Seller : Character
+    {
+        public Seller()
+        {
+            Name = "Seller";
+            Money = 0;
+            Fill();
+        }
+
+        public void Sell(Product product)
+        {
+            if (product == null)
+            {
+                Console.WriteLine("No Product!");
+            }
+            else
+            {
+                Money += product.Price;
+                Products.Remove(product);
+            }
+        }
+
+        public bool TryGetProduct(out Product product)
+        {
+            product = null;
+
+            if (Products.Count == 0)
+            {
+                Console.WriteLine("No information!");
+                return false;
             }
 
-            ShowWallet();
-            Console.WriteLine($" К оплате: {CalculateTotalPrice()} руб.");
-            Console.WriteLine("------------------------------------------------------------------------------");
-        }
+            Console.Write("Enter product's number to buy: ");
+            int numberProduct = Utils.ReadInteger();
 
-        public int CalculateTotalPrice()
-        {
-            int total = 0;
-
-            foreach (Product product in Products)
+            if (numberProduct<=0 || numberProduct> Products.Count)
             {
-                total += product.Price;
+                Console.WriteLine("Number is incorrect!");
+                return false;
             }
 
-            return total;
+            product = Products[numberProduct-1];
+            return true;
         }
 
-        public void ClearCart()
+        private void Fill() 
         {
-            Products.Clear();
+            Products.Add(new Product("Sword", 111));
+            Products.Add(new Product("Bow", 222));
+            Products.Add(new Product("Axe", 333));
+            Products.Add(new Product("Magic staff", 444));
+        }
+    }
+
+    class Buyer : Character
+    {
+        public Buyer()
+        {
+            Name = "Buyer";
+            Money = 1000;
         }
 
-        public bool IsEnoughMoney(int price)
+        public bool CanBuy(int price)
         {
-            return Wallet >= price;
+            return Money >= price;
         }
 
-        public void GiveMoney(int amount)
+        public void Buy(Product product)
         {
-            Wallet -= amount;
+            if (product == null)
+            {
+                Console.WriteLine("No product!");
+            }
+            else
+            {
+                Money = Money - product.Price;
+                Products.Add(product);
+            }
         }
     }
 
@@ -267,10 +197,20 @@ namespace homework
 
         public string Name { get; private set; }
         public int Price { get; private set; }
+    }
 
-        public void ShowInfo()
+    class Utils
+    {
+        public static int ReadInteger()
         {
-            Console.WriteLine($" {Name}. ({Price} руб.)");
+            int number;
+
+            while ((int.TryParse(Console.ReadLine(), out number) == false))
+            {
+                Console.WriteLine("404 EROR!");
+            }
+
+            return number;
         }
     }
 }
