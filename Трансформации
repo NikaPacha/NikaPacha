@@ -2,47 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SphereMover : MonoBehaviour
+public class Mover : MonoBehaviour
 {
-    [SerializeField] private float speed = 3f;
+    [SerializeField] private float _moveSpeed = 3f;
+
     void Update()
     {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(Vector3.forward * _moveSpeed * Time.deltaTime);
     }
 }
 
-public class CubeSpin : MonoBehaviour
+public class Spinner : MonoBehaviour
 {
-    [SerializeField] private float rotationSpeed = 50f;
+    [SerializeField] private float _rotationSpeed = 50f;
 
     private void Update()
     {
-        transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.up * _rotationSpeed * Time.deltaTime);
     }
 }
 
-public class CapsuleSise : MonoBehaviour
+public class Scaler : MonoBehaviour
 {
     [SerializeField] private float _growSpeed = 0.5f;
 
      private void Update()
     {
-        transform.localScale += Vector3.one * _growSpeed * Time.deltaTime;
-    }
-}
-
-public class CubeComplex : MonoBehaviour
-{
-    [SerializeField] private float _moveSpeed = 20f;
-    [SerializeField] private float _rotationSpeed = 100f;
-    [SerializeField] private float _growSpeed = 0.2f;
-
-    private void Update()
-    {
-        transform.Translate(Vector3.forward * _moveSpeed * Time.deltaTime);
-
-        transform.Rotate(Vector3.up * _rotationSpeed * Time.deltaTime);
-
         transform.localScale += Vector3.one * _growSpeed * Time.deltaTime;
     }
 }
