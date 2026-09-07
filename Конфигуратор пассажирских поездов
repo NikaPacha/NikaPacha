@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Homework
 {
@@ -8,45 +7,54 @@ namespace Homework
     {
         static void Main(string[] args)
         {
-            RailwayStation railway = new RailwayStation();
+            var station = new RailwayStation();
 
-            railway.Run();
+            station.Run();
         }
     }
 
     class RailwayStation
     {
+        private readonly List<Train> _trains = new List<Train>();
+        private readonly TrainConfigurator _trainConfigurator = new TrainConfigurator();
+
         public void Run()
         {
             const string CommandForm = "1";
             const string CommandExit = "2";
 
-            TrainConfigurator trainConfigurator = new TrainConfigurator();
             bool isWork = true;
 
             while (isWork)
             {
                 char spase = ' ';
                 int specifiedCellLength = 20;
-                string quantityOfWagons = "Кол-во вагонов";
+
+                string seatsCount = "Кол-во вагонов";
                 string cityOfDeparture = "Направление";
-                string quantityOfTicketsOfTrain = "Кол-во билетов";
+                string ticketsCount = "Кол-во билетов";
 
                 Console.Clear();
+
                 string wagons =
-                    $"{quantityOfWagons}{Utils.СreateCell(Convert.ToString(quantityOfWagons), specifiedCellLength, spase)}";
-                string direction = $"{cityOfDeparture}{Utils.СreateCell(cityOfDeparture, specifiedCellLength, spase)}";
+                    $"{seatsCount}{Utils.CreateCell(Convert.ToString(seatsCount), specifiedCellLength, spase)}";
+                string direction = $"{cityOfDeparture}{Utils.CreateCell(cityOfDeparture, specifiedCellLength, spase)}";
                 string quantityOfTickets =
-                    $"{quantityOfTicketsOfTrain}{Utils.СreateCell(quantityOfTicketsOfTrain, specifiedCellLength, spase)}";
+                    $"{ticketsCount}{Utils.CreateCell(ticketsCount, specifiedCellLength, spase)}";
 
                 Console.WriteLine($"||{wagons}|{direction}|{quantityOfTickets}||");
-                trainConfigurator.ShowTrain();
+                Console.WriteLine(new string('-', 70));
+
+                ShowTrains(_trains, specifiedCellLength, spase);
+
+                Console.WriteLine(new string('-', 70));
                 Console.WriteLine($"\nМеню: \n{CommandForm} - Сформировать поезд\n{CommandExit} - Выход");
 
                 switch (Console.ReadLine())
                 {
                     case CommandForm:
-                        trainConfigurator.FormTrain();
+                        var train = _trainConfigurator.FormTrain();
+                        _trains.Add(train);
                         break;
 
                     case CommandExit:
@@ -60,148 +68,152 @@ namespace Homework
                 }
             }
         }
-    }
-}
 
-class Utils
-{
-    public static int RandomInteger(int quantityMin, int quantityMax)
-    {
-        Random random = new Random();
-        int number = random.Next(quantityMin, quantityMax);
-        return number;
-    }
-
-    public static string СreateCell(string line, int fullLengthOfLine, char separatorColumn)
-    {
-        return String.Concat(Enumerable.Repeat(separatorColumn, fullLengthOfLine - line.Length));
-    }
-}
-
-class TrainConfigurator
-{
-    private List<Train> _trainСomposition = new List<Train>();
-
-    public void FormTrain()
-    {
-        string direction = CreateDirection();
-        int quantityOfTickets = IssueTickets();
-        List<Wagon> wagons = CreateWagons(quantityOfTickets);
-        Train train = new Train(wagons, direction, quantityOfTickets);
-        _trainСomposition.Add(train);
-    }
-
-    public void ShowTrain()
-    {
-        char spase = ' ';
-        int specifiedCellLength = 20;
-
-        foreach (var train in _trainСomposition)
+        public void ShowTrains(List<Train> trains, int cellLength, char spase)
         {
-            string wagons =
-                $"{train.wagons.Count}{Utils.СreateCell(Convert.ToString(train.wagons.Count), specifiedCellLength, spase)}";
-            string direction =
-                $"{train.Direction}{Utils.СreateCell(Convert.ToString(train.Direction), specifiedCellLength, spase)}";
-            string quantityOfTickets =
-                $"{train.QuantityOfTickets}{Utils.СreateCell(Convert.ToString(train.QuantityOfTickets), specifiedCellLength, spase)}";
-            Console.WriteLine($"||{wagons}|{direction}|{quantityOfTickets}||");
-        }
-    }
-
-    private string CreateDirection()
-    {
-
-        bool isCorrect = false;
-
-        while (!isCorrect)
-        {
-            string cityOfDeparture = ReadCity("Укажите город отправления: ");
-            string cityOfArrival = ReadCity("Укажите город назначения: ");
-
-            if (cityOfDeparture == cityOfArrival)
+            if (trains.Count == 0)
             {
-                Console.WriteLine("Ошибка маршрута! \n");
-                Console.ReadKey();
+                Console.WriteLine("||Нет сформированных поездов.||");
+                return;
             }
-            else
-            {
-                Direction direction = new Direction(cityOfDeparture, cityOfArrival);
 
-                return direction.ToString();
+            foreach (var train in trains)
+            {
+                string wagons =
+                    $"{train.Wagons.Count}{Utils.CreateCell(Convert.ToString(train.Wagons.Count), cellLength, spase)}";
+                string direction =
+                    $"{train.Direction}{Utils.CreateCell(Convert.ToString(train.Direction), cellLength, spase)}";
+                string quantityOfTickets =
+                    $"{train.QuantityOfTickets}{Utils.CreateCell(Convert.ToString(train.QuantityOfTickets), cellLength, spase)}";
+
+                Console.WriteLine($"||{wagons}|{direction}|{quantityOfTickets}||");
             }
         }
-        return string.Empty;
     }
 
-    private string ReadCity(string message)
+    class Utils
     {
-        Console.Write(message);
-        return Console.ReadLine();
-    }
+        private static readonly Random _random = new Random();
 
-    private int IssueTickets()
-    {
-        int quantityTrainOfPassengersMin = 10;
-        int quantityTrainOfPassengersMax = 3000;
-        int quantityOfTickets = Utils.RandomInteger(quantityTrainOfPassengersMin, quantityTrainOfPassengersMax);
-        return quantityOfTickets;
-    }
-
-    private List<Wagon> CreateWagons(int quantityOfTickets)
-    {
-        List<Wagon> wagons = new List<Wagon>();
-        int quantitySeatsInOfWagon = 56;
-
-        while (quantityOfTickets >= 0)
+        public static int RandomInteger(int quantityMin, int quantityMax)
         {
-            Wagon wagon = new Wagon(quantitySeatsInOfWagon);
-            quantityOfTickets -= quantitySeatsInOfWagon;
-            wagons.Add(wagon);
+
+            return _random.Next(quantityMin, quantityMax);
         }
 
-        return wagons;
-    }
-}
-
-class Wagon
-{
-    public int QuantitySeatsInOfWagon { get; private set; }
-
-    public Wagon(int quantitySeatsInOfWagon)
-    {
-        QuantitySeatsInOfWagon = quantitySeatsInOfWagon;
-    }
-}
-
-class Train
-{
-    public string Direction { get; private set; }
-    public int QuantityOfTickets { get; private set; }
-
-    private List<Wagon> _wagons;
-    public IReadOnlyList<Wagon> wagons => _wagons;
-
-    public Train(List<Wagon> wagons, string direction, int quantityOfTickets)
-    {
-        _wagons = wagons;
-        Direction = direction;
-        QuantityOfTickets = quantityOfTickets;
-    }
-}
-
-class Direction
-{
-    public string DeparturePoint { get; private set; }
-    public string ArrivalPoint { get; private set; }
-
-    public Direction(string departurePoint, string arrivalPoint)
-    {
-        DeparturePoint = departurePoint;
-        ArrivalPoint = arrivalPoint;
+        public static string CreateCell(string line, int fullLengthOfLine, char separatorColumn)
+        {
+            if (line.Length >= fullLengthOfLine) return string.Empty;
+            return new string(separatorColumn, fullLengthOfLine - line.Length);
+        }
     }
 
-    public override string ToString()
+    class TrainConfigurator
     {
-        return DeparturePoint + "-" + ArrivalPoint;
+        public Train FormTrain()
+        {
+            string direction = CreateDirection();
+            int quantityOfTickets = IssueTickets();
+
+            List<Wagon> wagons = CreateWagons(quantityOfTickets);
+
+            return new Train(wagons, direction, quantityOfTickets);
+        }
+
+        private string CreateDirection()
+        {
+            bool isCorrect = false;
+
+            while (!isCorrect)
+            {
+                string cityOfDeparture = ReadCity("Укажите город отправления: ");
+                string cityOfArrival = ReadCity("Укажите город назначения: ");
+
+                if (cityOfDeparture == cityOfArrival)
+                {
+                    Console.WriteLine("Ошибка маршрута! \n");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Direction direction = new Direction(cityOfDeparture, cityOfArrival);
+
+                    return direction.ToString();
+                }
+            }
+            return string.Empty;
+        }
+
+        private string ReadCity(string message)
+        {
+            Console.Write(message);
+            return Console.ReadLine();
+        }
+
+        private int IssueTickets()
+        {
+            int minPassengers = 10;
+            int maxPassengers = 3000;
+            return Utils.RandomInteger(minPassengers, maxPassengers);
+
+        }
+
+        private List<Wagon> CreateWagons(int quantityOfTickets)
+        {
+            List<Wagon> wagons = new List<Wagon>();
+            int seatsPerWagon = 56;
+
+            while (quantityOfTickets > 0)
+            {
+                Wagon wagon = new Wagon(seatsPerWagon);
+                quantityOfTickets -= seatsPerWagon;
+                wagons.Add(wagon);
+            }
+
+            return wagons;
+        }
+    }
+
+    class Wagon
+    {
+        public int QuantitySeatsInOfWagon { get; private set; }
+
+        public Wagon(int quantitySeatsInOfWagon)
+        {
+            QuantitySeatsInOfWagon = quantitySeatsInOfWagon;
+        }
+    }
+
+    class Train
+    {
+        public string Direction { get; private set; }
+        public int QuantityOfTickets { get; private set; }
+
+        private List<Wagon> _wagons;
+        public IReadOnlyList<Wagon> Wagons => _wagons;
+
+        public Train(List<Wagon> wagons, string direction, int quantityOfTickets)
+        {
+            _wagons = wagons;
+            Direction = direction;
+            QuantityOfTickets = quantityOfTickets;
+        }
+    }
+
+    class Direction
+    {
+        public string DeparturePoint { get; private set; }
+        public string ArrivalPoint { get; private set; }
+
+        public Direction(string departurePoint, string arrivalPoint)
+        {
+            DeparturePoint = departurePoint;
+            ArrivalPoint = arrivalPoint;
+        }
+
+        public override string ToString()
+        {
+            return DeparturePoint + "-" + ArrivalPoint;
+        }
     }
 }
