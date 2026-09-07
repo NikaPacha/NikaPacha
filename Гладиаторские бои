@@ -1,0 +1,105 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace домашка
+{
+    internal class Program
+    {
+         static void Main(string[] args)
+        {
+            
+        }
+    }
+
+    public class Arena
+    {
+         Knight warrior1 = new Knight("Knight",100, 25, 15);
+         Rogue warrior2 = new Rogue("Dualist", 70, 30, 10);
+         Barbarian warrior3 = new Barbarian("Barbarian", 125, 40, 0);
+         Mage warrior4 = new Mage("Mage",50, 150, 5);
+         Monck warrior5 = new Monck("Monck", 70, 50, 10);
+    }
+    
+    class Worior
+    {
+        protected string Name;
+        protected int Health;
+        protected int Damage;
+        protected int Armor;
+
+        protected Worior(string name, int health, int damage, int armor)
+        {
+            Name = name;
+            Health = health;
+            Damage = damage;
+            Armor = armor;
+        }
+
+        protected void TakeDamage(int damage)
+        {
+            Health -= damage - Armor;
+        }
+
+        protected void ShowCurrentHealth(string name, int health)
+        {
+            Console.WriteLine(name + "осталось" + health + "здоровья");
+        }
+    }
+
+    class Knight : Worior
+    {
+        public Knight(string name, int health, int damage, int armor) : base(name, health, damage, armor){}
+
+        private void CritDamage(int damage)
+        {
+            Damage *= 2;
+        }
+    }
+
+    class Rogue : Worior
+    {
+        public Rogue(string name, int health, int damage, int armor) : base(name, health, damage, armor){}
+
+        private void SecondAttack(int damage)
+        {
+            // 1/3 shans vtoroj ataki
+        }
+    }
+
+    class Barbarian : Worior
+    {
+        public Barbarian(string name, int health, int damage, int armor) : base(name, health, damage, armor){}
+        
+        private int Rage = 0;
+
+        private void RageHeal(int health)
+        {
+            if (Rage >= 100)
+            {
+                Health += 20;
+                Rage = 0;
+            }
+        }
+    }
+
+    class Mage : Worior
+    {
+        public Mage(string name, int health, int damage, int armor) : base(name, health, damage, armor){}
+        
+        private int Mana;
+    }
+
+    class Monck : Worior
+    {
+        public Monck(string name, int health, int damage, int armor) : base(name, health, damage, armor){}
+        
+        private void DodgChance(int damage)
+        {
+            
+        }
+    }
+}
