@@ -1,105 +1,307 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 
 namespace домашка
 {
     internal class Program
     {
-         static void Main(string[] args)
+        static void Main(string[] args)
         {
-            
+            Arena arena = new Arena();
+
+            arena.Play();
         }
     }
 
     public class Arena
     {
-         Knight warrior1 = new Knight("Knight",100, 25, 15);
-         Rogue warrior2 = new Rogue("Dualist", 70, 30, 10);
-         Barbarian warrior3 = new Barbarian("Barbarian", 125, 40, 0);
-         Mage warrior4 = new Mage("Mage",50, 150, 5);
-         Monck warrior5 = new Monck("Monck", 70, 50, 10);
-    }
-    
-    class Worior
-    {
-        protected string Name;
-        protected int Health;
-        protected int Damage;
-        protected int Armor;
-
-        protected Worior(string name, int health, int damage, int armor)
+        Worior[] woriors =
         {
-            Name = name;
-            Health = health;
-            Damage = damage;
-            Armor = armor;
-        }
+           new Paladin("Паладин", 45, 6, 3),
+           new Rogue("Плут", 35, 8, 2),
+           new Barbarian("Варвар", 60, 4, 1),
+           new Mage("Волшебник", 30, 3, 1),
+           new Monck("Монах", 35, 7, 2)
+        };
 
-        protected void TakeDamage(int damage)
+        public void Play()
         {
-            Health -= damage - Armor;
-        }
-
-        protected void ShowCurrentHealth(string name, int health)
-        {
-            Console.WriteLine(name + "осталось" + health + "здоровья");
-        }
-    }
-
-    class Knight : Worior
-    {
-        public Knight(string name, int health, int damage, int armor) : base(name, health, damage, armor){}
-
-        private void CritDamage(int damage)
-        {
-            Damage *= 2;
-        }
-    }
-
-    class Rogue : Worior
-    {
-        public Rogue(string name, int health, int damage, int armor) : base(name, health, damage, armor){}
-
-        private void SecondAttack(int damage)
-        {
-            // 1/3 shans vtoroj ataki
-        }
-    }
-
-    class Barbarian : Worior
-    {
-        public Barbarian(string name, int health, int damage, int armor) : base(name, health, damage, armor){}
-        
-        private int Rage = 0;
-
-        private void RageHeal(int health)
-        {
-            if (Rage >= 100)
+            int number = 1;
+            foreach (var worior in woriors)
             {
-                Health += 20;
-                Rage = 0;
+                Console.Write(number + ") ");
+                worior.ShowStats();
+                number++;
+            }
+
+            ShowFight();
+        }
+
+        public void ShowFight()
+        {
+            Console.WriteLine(new string('-', 60));
+            int firstFighterNumber = ReadChoice(woriors.Length);
+            Worior firstWorior = woriors[firstFighterNumber].Clone();
+
+            int secondFighterNumber = ReadChoice(woriors.Length);
+            Worior secondWorior = woriors[secondFighterNumber].Clone();
+            Console.WriteLine(new string('-', 60) + "\n\n");
+
+            StartRound(secondWorior, firstWorior);
+
+            StartRound(firstWorior, secondWorior);
+
+            while (firstWorior.Health > 0 && secondWorior.Health > 0)
+            {
+                if (!PerformTurn(secondWorior, firstWorior)) break;
+
+                if (!PerformTurn(firstWorior, secondWorior)) break;
+            }
+
+            Console.WriteLine(new string('-', 60));
+            if (firstWorior.Health <= 0 && secondWorior.Health <= 0)
+                Console.WriteLine("Ничья! Оба бойца пали.");
+            else if (firstWorior.Health <= 0)
+                Console.WriteLine($"{secondWorior.Name} побеждает!");
+            else
+                Console.WriteLine($"{firstWorior.Name} побеждает!");
+        }
+
+        private void StartRound(Worior attacker, Worior defender)
+        {
+            if (attacker.Name == "Волшебник")
+            {
+                int damage = attacker.Atack();
+                TimeToTurn();
+                defender.GetHit(damage);
+                defender.ShowCurrentHealth();
+            }
+            else
+            {
+                attacker.FirstMoove(attacker.Name);
             }
         }
-    }
 
-    class Mage : Worior
-    {
-        public Mage(string name, int health, int damage, int armor) : base(name, health, damage, armor){}
-        
-        private int Mana;
-    }
-
-    class Monck : Worior
-    {
-        public Monck(string name, int health, int damage, int armor) : base(name, health, damage, armor){}
-        
-        private void DodgChance(int damage)
+        private bool PerformTurn(Worior attacker, Worior defender)
         {
-            
+            Console.Write(attacker.Name);
+            int damage = attacker.Atack();
+            TimeToTurn();
+
+            defender.GetHit(damage);
+            defender.ShowCurrentHealth();
+            Console.ReadKey();
+
+            return defender.Health > 0;
         }
+
+        private int ReadChoice(int max)
+        {
+            while (true)
+            {
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out int choice) && choice >= 1 && choice <= max)
+                    return choice - 1;
+                Console.Write($"Некорректный ввод. Введите число от 1 до {max}: ");
+            }
+        }
+
+        public void TimeToTurn()
+        {
+            System.Threading.Thread.Sleep(1000);
+        }
+    }
+}
+
+abstract class Worior
+{
+    public string Name { get; private set; }
+    public int Health { get; private set; }
+    public int Damage { get; private set; }
+    public int Armor { get; private set; }
+
+    protected Worior(string name, int health, int damage, int armor)
+    {
+        Name = name;
+        Health = health;
+        Damage = damage;
+        Armor = armor;
+    }
+
+    public abstract Worior Clone();
+
+    public void ShowStats()
+    {
+        Console.WriteLine($"Боец - {Name}, Здоровье: {Health}, Защита: {Armor}, Урон: {Damage}");
+    }
+
+    public void GetHit(int damage)
+    {
+        Health = TakeDamage(damage, Health);
+    }
+
+    public virtual int TakeDamage(int damage, int currentHealth)
+    {
+        int netDamage = Math.Max(0, damage - Armor);
+        return currentHealth - netDamage;
+    }
+
+    public virtual int Atack()
+    {
+        Console.Write($" Атакует ({Damage}) урона. ");
+        return Damage;
+    }
+
+    public void ShowCurrentHealth()
+    {
+        Console.WriteLine($"У бойца {Name} - {Health} здоровья.");
+    }
+
+    public virtual void FirstMoove(string name)
+    {
+        Console.WriteLine($"{name} Бежит к противнику.");
+    }
+}
+
+class Paladin : Worior
+{
+    public Paladin(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
+
+    public override Worior Clone() => new Paladin(Name, Health, Damage, Armor);
+
+    Random creetChance = new Random(Guid.NewGuid().GetHashCode());
+
+    public override int Atack()
+    {
+        int powerOfAtack;
+
+        if (creetChance.Next(1, 11) > 7)
+        {
+            powerOfAtack = Damage * 3;
+            Console.Write($" Атакует -- Критческий удар ({powerOfAtack}) урона. ");
+
+            return powerOfAtack;
+        }
+        else
+        {
+            powerOfAtack = Damage;
+            Console.Write($" Атакует ({powerOfAtack}) урона. ");
+            return powerOfAtack;
+        }
+    }
+}
+
+class Rogue : Worior
+{
+    public Rogue(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
+
+    private int atackCount = 0;
+    private int powerOfAtack;
+
+    public override Worior Clone() => new Rogue(Name, Health, Damage, Armor);
+
+    public override int Atack()
+    {
+        atackCount++;
+
+        if (atackCount >= 3)
+        {
+            powerOfAtack = Damage * 2;
+            Console.Write($" Атакует -- Двойная атака ({powerOfAtack}) урона. ");
+            atackCount = 0;
+        }
+        else
+        {
+            powerOfAtack = Damage;
+            Console.Write($" Атакует ({powerOfAtack}) урона. ");
+        }
+        return powerOfAtack;
+    }
+}
+
+class Barbarian : Worior
+{
+    public Barbarian(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
+
+    private int _rageBar = 0;
+    private int _rage = 25;
+    private int _rageHeal = 20;
+
+    public override Worior Clone() => new Barbarian(Name, Health, Damage, Armor);
+
+    public override int TakeDamage(int damage, int health)
+    {
+        int currentHealth = health;
+        int netDamage = Math.Max(0, damage - Armor);
+        currentHealth -= netDamage;
+        _rageBar += _rage;
+
+        if (_rageBar >= 100)
+        {
+            Console.Write(" !!!Варвар впадает в ярость (+ 20 здоровья)!!! ");
+            currentHealth += _rageHeal;
+            _rageBar = 0;
+        }
+        return currentHealth;
+    }
+}
+
+class Mage : Worior
+{
+    public Mage(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
+
+    private int powerOfAtack;
+    private int manaPool = 100;
+    private int firstSpellManaCost = 40;
+    private int secondSpellManaCost = 10;
+    private int firstSpellDamage = 15;
+    private int secondSpellDamage = 4;
+
+    public override Worior Clone() => new Mage(Name, Health, Damage, Armor);
+
+    public override int Atack()
+    {
+        if (manaPool >= firstSpellManaCost)
+        {
+            powerOfAtack = firstSpellDamage;
+            manaPool -= firstSpellManaCost;
+            Console.Write($" Атакует -- FIREBOLL ({powerOfAtack}) урона. ");
+        }
+        else if (manaPool >= secondSpellManaCost)
+        {
+            powerOfAtack = secondSpellDamage;
+            manaPool -= secondSpellManaCost;
+            Console.Write($" Атакует -- Обжигающее касание ({powerOfAtack}) урона. ");
+        }
+        else
+        {
+            powerOfAtack = Damage;
+            Console.Write($" Атакует -- Удар палкой ({powerOfAtack}) урона. ");
+        }
+        return powerOfAtack;
+    }
+}
+
+class Monck : Worior
+{
+    public Monck(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
+
+    public override Worior Clone() => new Monck(Name, Health, Damage, Armor);
+
+    Random dodgeChance = new Random(Guid.NewGuid().GetHashCode());
+
+    public override int TakeDamage(int damage, int health)
+    {
+        int currentHealth = health;
+
+        if (dodgeChance.Next(1, 11) <= 3)
+        {
+            int netDamage = Math.Max(0, damage - Armor);
+            currentHealth -= netDamage;
+        }
+        else
+        {
+            Console.Write(" Монах увернулся!!! ");
+        }
+        return currentHealth;
     }
 }
